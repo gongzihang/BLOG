@@ -19,23 +19,29 @@
   <meta name="author" content="Zihang Gong">
   <meta name="keywords" content="">
   
-    <meta name="description" content="📘 Markdown 写作模板（含 Front Matter 与语法指南）  第一部分：📄 Front Matter 配置说明  Front Matter 是 Markdown 文件顶部的元信息，用于配置文章标题、标签、分类、日期等内容。通常写在 --- 包裹的 YAML 格式中。  🧾 示例模板 1234567891011121314---layout: postti">
+    <meta name="description" content="从这个一个博客开始，我们将进行线性代数的复习。由于是用于夏令营以及与推免考核所用，我们一些简单的定义和定理将直接带过  线性代数：矩阵与线性方程组 我们从矩阵开始复习，同时带到线性相关、子空间等概念。 我们先介绍最简单的概念，线性相关与线性无关 线性相关与线性无关 我们定义列向量 {a1, a2, a3, …，an}  线性相关(Linear Dependent)：若是存在不全">
 <meta property="og:type" content="article">
-<meta property="og:title" content="博客写入教程">
-<meta property="og:url" content="https://gongzihang.github.io/2025/05/24/%E5%8D%9A%E5%AE%A2%E5%86%99%E5%85%A5%E6%95%99%E7%A8%8B/index.html">
+<meta property="og:title" content="线性代数：矩阵与线性方程组">
+<meta property="og:url" content="https://gongzihang.github.io/2025/05/25/%E7%BA%BF%E6%80%A7%E4%BB%A3%E6%95%B0%EF%BC%9A%E7%9F%A9%E9%98%B5%E5%8F%8A%E5%85%B6%E5%BA%94%E7%94%A8/index.html">
 <meta property="og:site_name" content="Zihang Gong&#39;s Blog">
-<meta property="og:description" content="📘 Markdown 写作模板（含 Front Matter 与语法指南）  第一部分：📄 Front Matter 配置说明  Front Matter 是 Markdown 文件顶部的元信息，用于配置文章标题、标签、分类、日期等内容。通常写在 --- 包裹的 YAML 格式中。  🧾 示例模板 1234567891011121314---layout: postti">
+<meta property="og:description" content="从这个一个博客开始，我们将进行线性代数的复习。由于是用于夏令营以及与推免考核所用，我们一些简单的定义和定理将直接带过  线性代数：矩阵与线性方程组 我们从矩阵开始复习，同时带到线性相关、子空间等概念。 我们先介绍最简单的概念，线性相关与线性无关 线性相关与线性无关 我们定义列向量 {a1, a2, a3, …，an}  线性相关(Linear Dependent)：若是存在不全">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2025-05-24T12:27:46.000Z">
-<meta property="article:modified_time" content="2025-05-24T13:41:01.153Z">
+<meta property="og:image" content="https://gongzihang.github.io/2025/05/25/%E7%BA%BF%E6%80%A7%E4%BB%A3%E6%95%B0%EF%BC%9A%E7%9F%A9%E9%98%B5%E5%8F%8A%E5%85%B6%E5%BA%94%E7%94%A8/Rank.png">
+<meta property="og:image" content="https://gongzihang.github.io/2025/05/25/%E7%BA%BF%E6%80%A7%E4%BB%A3%E6%95%B0%EF%BC%9A%E7%9F%A9%E9%98%B5%E5%8F%8A%E5%85%B6%E5%BA%94%E7%94%A8/invert.jpg">
+<meta property="og:image" content="https://gongzihang.github.io/2025/05/25/%E7%BA%BF%E6%80%A7%E4%BB%A3%E6%95%B0%EF%BC%9A%E7%9F%A9%E9%98%B5%E5%8F%8A%E5%85%B6%E5%BA%94%E7%94%A8/det.jpg">
+<meta property="og:image" content="https://gongzihang.github.io/2025/05/25/%E7%BA%BF%E6%80%A7%E4%BB%A3%E6%95%B0%EF%BC%9A%E7%9F%A9%E9%98%B5%E5%8F%8A%E5%85%B6%E5%BA%94%E7%94%A8/Echelon.jpg">
+<meta property="og:image" content="https://gongzihang.github.io/2025/05/25/%E7%BA%BF%E6%80%A7%E4%BB%A3%E6%95%B0%EF%BC%9A%E7%9F%A9%E9%98%B5%E5%8F%8A%E5%85%B6%E5%BA%94%E7%94%A8/result.jpg">
+<meta property="article:published_time" content="2025-05-25T09:42:39.000Z">
+<meta property="article:modified_time" content="2025-05-25T11:55:44.327Z">
 <meta property="article:author" content="Zihang Gong">
-<meta property="article:tag" content="Markdown">
-<meta property="article:tag" content="教程">
+<meta property="article:tag" content="数学">
+<meta property="article:tag" content="线性代数">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://gongzihang.github.io/2025/05/25/%E7%BA%BF%E6%80%A7%E4%BB%A3%E6%95%B0%EF%BC%9A%E7%9F%A9%E9%98%B5%E5%8F%8A%E5%85%B6%E5%BA%94%E7%94%A8/Rank.png">
   
   
   
-  <title>博客写入教程 - Zihang Gong&#39;s Blog</title>
+  <title>线性代数：矩阵与线性方程组 - Zihang Gong&#39;s Blog</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -214,7 +220,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="博客写入教程"></span>
+            <span id="subtitle" data-typed-text="线性代数：矩阵与线性方程组"></span>
           
         </div>
 
@@ -225,8 +231,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2025-05-24 20:27" pubdate>
-          2025年5月24日 晚上
+        <time datetime="2025-05-25 17:42" pubdate>
+          2025年5月25日 下午
         </time>
       </span>
     
@@ -237,7 +243,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          532 字
+          1.3k 字
         
       </span>
     
@@ -248,7 +254,7 @@
         
         
         
-          5 分钟
+          11 分钟
         
       </span>
     
@@ -285,166 +291,171 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">博客写入教程</h1>
+            <h1 id="seo-header">线性代数：矩阵与线性方程组</h1>
             
             
               <div class="markdown-body">
                 
-                <h1 id="markdown-写作模板含-front-matter-与语法指南">📘 Markdown
-写作模板（含 Front Matter 与语法指南）</h1>
-<hr />
-<h2 id="第一部分-front-matter-配置说明">第一部分：📄 Front Matter
-配置说明</h2>
-<blockquote>
-<p>Front Matter 是 Markdown
-文件顶部的元信息，用于配置文章标题、标签、分类、日期等内容。通常写在
-<code>---</code> 包裹的 YAML 格式中。</p>
+                <blockquote>
+<p>从这个一个博客开始，我们将进行线性代数的复习。由于是用于夏令营以及与推免考核所用，我们一些简单的定义和定理将直接带过</p>
 </blockquote>
-<h3 id="示例模板">🧾 示例模板</h3>
-<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-meta">---</span><br><span class="hljs-attr">layout:</span> <span class="hljs-string">post</span><br><span class="hljs-attr">title:</span> <span class="hljs-string">我的第一篇博客</span><br><span class="hljs-attr">date:</span> <span class="hljs-number">2025-05-24 10:00:00</span><br><span class="hljs-attr">updated:</span> <span class="hljs-number">2025-05-24 12:00:00</span><br><span class="hljs-attr">comments:</span> <span class="hljs-literal">true</span><br><span class="hljs-attr">tags:</span> [<span class="hljs-string">Markdown</span>, <span class="hljs-string">教程</span>]<br><span class="hljs-attr">categories:</span> [<span class="hljs-string">技术笔记</span>]<br><span class="hljs-attr">permalink:</span> <span class="hljs-string">/markdown-guide.html</span><br><span class="hljs-attr">excerpt:</span> <span class="hljs-string">本文介绍了</span> <span class="hljs-string">Markdown</span> <span class="hljs-string">的语法与博客头部配置。</span><br><span class="hljs-attr">disableNunjucks:</span> <span class="hljs-literal">false</span><br><span class="hljs-attr">lang:</span> <span class="hljs-string">zh-CN</span><br><span class="hljs-attr">published:</span> <span class="hljs-literal">true</span><br><span class="hljs-meta">---</span><br></code></pre></td></tr></table></figure>
-<h3 id="字段说明表">📋 字段说明表</h3>
-<table>
-
-<thead>
-<tr class="header">
-<th>字段名</th>
-<th>说明</th>
-<th>默认值</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><code>layout</code></td>
-<td>页面布局模板（如 <code>post</code>、<code>page</code>）</td>
-<td><code>config.default_layout</code></td>
-</tr>
-<tr class="even">
-<td><code>title</code></td>
-<td>页面标题</td>
-<td>文件名</td>
-</tr>
-<tr class="odd">
-<td><code>date</code></td>
-<td>建立日期</td>
-<td>文件创建时间</td>
-</tr>
-<tr class="even">
-<td><code>updated</code></td>
-<td>最近更新日期</td>
-<td>文件更新时间</td>
-</tr>
-<tr class="odd">
-<td><code>comments</code></td>
-<td>是否启用评论</td>
-<td><code>true</code></td>
-</tr>
-<tr class="even">
-<td><code>tags</code></td>
-<td>标签数组，用于分类内容</td>
-<td>空</td>
-</tr>
-<tr class="odd">
-<td><code>categories</code></td>
-<td>分类数组（适用于归档）</td>
-<td>空</td>
-</tr>
-<tr class="even">
-<td><code>permalink</code></td>
-<td>自定义永久链接（应以 <code>/</code> 或 <code>.html</code>
-结尾）</td>
-<td><code>null</code></td>
-</tr>
-<tr class="odd">
-<td><code>excerpt</code></td>
-<td>页面摘要，建议结合插件处理</td>
-<td>空</td>
-</tr>
-<tr class="even">
-<td><code>disableNunjucks</code></td>
-<td>禁用 Nunjucks
-模板语法（<code>&#123;&#123; &#125;&#125;</code>、<code>&#123;% %&#125;</code>）</td>
-<td><code>false</code></td>
-</tr>
-<tr class="odd">
-<td><code>lang</code></td>
-<td>页面语言，覆盖默认配置</td>
-<td>继承自 <code>_config.yml</code></td>
-</tr>
-<tr class="even">
-<td><code>published</code></td>
-<td>是否发布该文章</td>
-<td><code>_posts</code> 下为 <code>true</code>，草稿为
-<code>false</code></td>
-</tr>
-</tbody>
-</table>
-<hr />
-<h2 id="第二部分-markdown-语法速查手册">第二部分：📝 Markdown
-语法速查手册</h2>
-<h3 id="标题">1️⃣ 标题</h3>
-<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs markdown"><span class="hljs-section"># 一级标题</span><br><span class="hljs-section">## 二级标题</span><br><span class="hljs-section">### 三级标题</span><br></code></pre></td></tr></table></figure>
-<hr />
-<h3 id="段落与换行">2️⃣ 段落与换行</h3>
-<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs markdown">这是第一段。<br><br>这是第二段，  <br>这里使用两个空格加换行。<br></code></pre></td></tr></table></figure>
-<hr />
-<h3 id="文本格式">3️⃣ 文本格式</h3>
-<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs markdown"><span class="hljs-strong">**加粗文本**</span><br><span class="hljs-emphasis">*斜体文本*</span><br>~~删除线文本~~<br><span class="hljs-code">`行内代码`</span><br></code></pre></td></tr></table></figure>
-<hr />
-<h3 id="引用块">4️⃣ 引用块</h3>
-<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs markdown"><span class="hljs-quote">&gt; 一级引用</span><br>&gt;&gt; 二级引用<br></code></pre></td></tr></table></figure>
-<hr />
-<h3 id="列表">5️⃣ 列表</h3>
+<h1 id="线性代数矩阵与线性方程组">线性代数：矩阵与线性方程组</h1>
+<p>我们从矩阵开始复习，同时带到线性相关、子空间等概念。</p>
+<p>我们先介绍最简单的概念，线性相关与线性无关</p>
+<h2 id="线性相关与线性无关">线性相关与线性无关</h2>
+<p>我们定义列向量 <span
+class="math inline">{<em>a</em><sub>1</sub>, <em>a</em><sub>2</sub>, <em>a</em><sub>3</sub>, …，<em>a</em><sub><em>n</em></sub>}</span></p>
 <ul>
-<li><strong>无序列表</strong></li>
+<li><p><strong>线性相关(Linear Dependent)</strong>：若是存在不全为
+<strong>0</strong> 的向量 <span
+class="math inline"><em>X</em> = {<em>x</em><sub>1</sub>, <em>x</em><sub>2</sub>, <em>x</em><sub>3</sub>, …, <em>x</em><sub><em>n</em></sub>}</span>
+满足 <span
+class="math inline"><em>x</em><sub>1</sub><em>a</em><sub>1</sub> + <em>x</em><sub>2</sub><em>a</em><sub>2</sub> + <em>x</em><sub>3</sub><em>a</em><sub>3</sub> + … + <em>x</em><sub><em>n</em></sub><em>a</em><sub><em>n</em></sub> = 0</span>，
+则称列向量<span
+class="math inline">{<em>a</em><sub>1</sub>, <em>a</em><sub>2</sub>, <em>a</em><sub>3</sub>, …，<em>a</em><sub><em>n</em></sub>}</span>
+线性相关</p></li>
+<li><p><strong>线性无关(Linear Independent)</strong>：
+与上述相反，如果不存在不全为 <strong>0</strong> 的向量 <span
+class="math inline"><em>X</em> = {<em>x</em><sub>1</sub>, <em>x</em><sub>2</sub>, <em>x</em><sub>3</sub>, …, <em>x</em><sub><em>n</em></sub>}</span>满足条件，则称之为线性无关</p></li>
 </ul>
-<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs markdown"><span class="hljs-bullet">-</span> 项目一<br><span class="hljs-bullet">-</span> 项目二<br></code></pre></td></tr></table></figure>
+<p>随后我们简单回顾矩阵，矩阵的定义从向量导入，如果矩阵有m行和n列，我们就说矩阵的大小为<span
+class="math inline"><em>m</em> * <em>n</em></span>，如果<span
+class="math inline"><em>m</em> = <em>n</em></span>，我们称为方阵（<strong>square
+matrix</strong>）</p>
+<h2 id="矩阵的计算">矩阵的计算</h2>
+<p>这里我们简单介绍矩阵的而一些计算与属性</p>
 <ul>
-<li><strong>有序列表</strong></li>
-</ul>
-<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs markdown"><span class="hljs-bullet">1.</span> 步骤一<br><span class="hljs-bullet">2.</span> 步骤二<br></code></pre></td></tr></table></figure>
-<hr />
-<h3 id="代码块">6️⃣ 代码块</h3>
+<li><p>矩阵和标量相乘，即每个元素和标量相乘</p></li>
+<li><p>矩阵（向量）和矩阵（向量）相乘， 即按照顺序依次相乘</p>
 <ul>
-<li><strong>行内代码</strong></li>
+<li>若<span
+class="math inline"><em>A</em><em>B</em> = <em>B</em><em>A</em></span>，则称A与B乘法可交换。n阶单位矩阵E与任何n阶矩阵乘法可交换</li>
+</ul></li>
+<li><p>矩阵的分块乘法</p></li>
+<li><p>矩阵<strong>转置</strong></p></li>
+<li><p>矩阵<strong>共轭</strong>:
+即矩阵内每个元素取其共轭的结果</p></li>
+<li><p>矩阵的<strong>秩（Rank)</strong>:
+矩阵列向量中最大的线性无关的数目（The maximum number of Linear
+Independent columns)</p></li>
+<li><p>矩阵的<strong>零化度（Nullity）：</strong>
+矩阵的列数减去矩阵的秩</p></li>
 </ul>
-<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs markdown">这是 <span class="hljs-code">`inline code`</span><br></code></pre></td></tr></table></figure>
+<h3 id="矩阵的逆">矩阵的逆</h3>
+<p>如果两个方阵A和B的乘积是单位矩阵，AB=I，那么A和B就是互为逆矩阵</p>
+<p>矩阵的逆有如下定义：</p>
 <ul>
-<li><strong>多行代码块</strong></li>
+<li><p><span
+class="math inline">(<em>A</em><sup>−1</sup>)<sup>−1</sup> = <em>A</em></span></p></li>
+<li><p><span
+class="math inline">(<em>k</em><em>A</em>)<sup>−1</sup> = <em>k</em><sup>−1</sup><em>A</em><sup>−1</sup></span></p></li>
+<li><p><span
+class="math inline">(<em>A</em><sup><em>T</em></sup>)<sup>−1</sup> = (<em>A</em><sup>−1</sup>)<sup><em>T</em></sup></span></p></li>
+<li><p><span
+class="math inline">(<em>A</em><em>B</em>)<sup>−1</sup> = <em>B</em><sup>−1</sup><em>A</em><sup>−1</sup></span></p></li>
 </ul>
-<details>
-<summary>
-Python 示例
-</summary>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">greet</span>():<br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;Hello Markdown!&quot;</span>)<br></code></pre></td></tr></table></figure>
-</details>
-<hr />
-<h3 id="表格">7️⃣ 表格</h3>
-<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs markdown">| 名称    | 类型   | 描述       |<br>|---------|--------|------------|<br>| title   | 字符串 | 文章标题   |<br>| date    | 日期   | 创建时间   |<br></code></pre></td></tr></table></figure>
-<hr />
-<h3 id="链接与图片">8️⃣ 链接与图片</h3>
+<p>矩阵的逆还有如下的性质（需要牢记）：</p>
+<figure>
+<img src="Rank.png" srcset="/BLOG/img/loading.gif" lazyload alt="矩阵逆的性质" />
+<figcaption aria-hidden="true">矩阵逆的性质</figcaption>
+</figure>
+<p>对于一个方阵，其可逆判别可用如下任意一条：</p>
+<figure>
+<img src="invert.jpg" srcset="/BLOG/img/loading.gif" lazyload alt="矩阵可逆的判别" />
+<figcaption aria-hidden="true">矩阵可逆的判别</figcaption>
+</figure>
+<h3 id="矩阵的行列式">矩阵的行列式</h3>
+<p>具体计算我们带过，我们讨论一下行列式的性质</p>
 <ul>
-<li><strong>链接</strong></li>
+<li><p>交换任意两行，行列式取负号</p></li>
+<li><p>行列式的标量乘法： <span
+class="math inline"><em>d</em><em>e</em><em>t</em>(2<em>A</em>) = 2<sup><em>n</em></sup><em>d</em><em>e</em><em>t</em>(<em>A</em>)</span></p></li>
+<li><p>矩阵乘法的行列式：</p></li>
 </ul>
-<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs markdown">[<span class="hljs-string">OpenAI 官网</span>](<span class="hljs-link">https://www.openai.com</span>)<br></code></pre></td></tr></table></figure>
+<figure>
+<img src="det.jpg" srcset="/BLOG/img/loading.gif" lazyload alt="矩阵乘法的行列式" />
+<figcaption aria-hidden="true">矩阵乘法的行列式</figcaption>
+</figure>
 <ul>
-<li><strong>图片</strong></li>
+<li><p>如果一个方阵的行列式不为0，那么它是可逆的，反之，如果一个方阵可逆，那么它的行列式不为0</p></li>
+<li><p><span class="math inline">$\bullet
+A^{-1}=\frac{1}{det(A)}C^T$</span> 其中<span
+class="math inline"><em>C</em></span>为伴随矩阵，具体如下</p></li>
 </ul>
-<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs markdown">![<span class="hljs-string">替代文字</span>](<span class="hljs-link">https://via.placeholder.com/150</span>)<br></code></pre></td></tr></table></figure>
-<hr />
-<h3 id="分隔线">9️⃣ 分隔线</h3>
-<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs markdown">---<br></code></pre></td></tr></table></figure>
-<hr />
-<h3 id="任务列表github-支持">🔟 任务列表（GitHub 支持）</h3>
-<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs markdown"><span class="hljs-bullet">-</span> [x] 学习 Markdown<br><span class="hljs-bullet">-</span> [ ] 写一篇博客<br></code></pre></td></tr></table></figure>
-<hr />
-<h3 id="转义字符防止符号被识别">🧩 转义字符（防止符号被识别）</h3>
-<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs markdown">\<span class="hljs-emphasis">*星号\*</span> 不会加粗  <br>\<span class="hljs-code">`反引号\`</span> 不会变成代码  <br></code></pre></td></tr></table></figure>
-<h3 id="公式说明">公式说明</h3>
-<blockquote>
-<p>$$ E = mc^2 $$ 可以实现公式的书写</p>
-<p><span
-class="math display"><em>E</em> = <em>m</em><em>c</em><sup>2</sup></span></p>
-</blockquote>
+<p><span class="math display">$$C=
+\begin{bmatrix}
+c_{11} &amp; \cdots &amp; c_{1n} \\
+\vdots &amp; \ddots &amp; \vdots \\
+c_{n1} &amp; \cdots &amp; c_{nn}
+\end{bmatrix}$$</span></p>
+<p>其中 <span
+class="math inline"><em>c</em><sub><em>i</em><em>j</em></sub> = (−1)<sup><em>i</em> + <em>j</em></sup><em>d</em><em>e</em><em>t</em>(<em>A</em><sub><em>i</em><em>j</em></sub>)</span>
+为代数余子式</p>
+<h3 id="初等矩阵">初等矩阵</h3>
+<p><strong>初等矩阵</strong>： 对单位矩阵进行一次变换后的矩阵</p>
+<p>相关定理（<strong>左行右列</strong>）：</p>
+<ul>
+<li><p>对A施行初等<strong>行变换</strong>，其结果等于在A左边乘以相应的初等矩阵；</p></li>
+<li><p>对A施行初等<strong>列变换</strong>，其结果等于在A右边乘以相应的初等矩阵</p></li>
+<li><p>n阶方阵可逆的<strong>充要条件</strong>是它能表示成一些初等矩阵的乘积</p></li>
+</ul>
+<h2 id="线性方程组">线性方程组</h2>
+<p>我们借助矩阵带一下线性方程组的相关概念与性质</p>
+<p><strong>我们可以用矩阵表达一个线性方程组，即： <span
+class="math inline"><em>A</em><em>x</em> = <em>b</em></span>
+,其中A为矩阵，<span
+class="math inline"><em>x</em>, <em>b</em></span>分别为对应维度的列向量</strong></p>
+<h3 id="解的情况与相容性">解的情况与相容性</h3>
+<p>线性方程组解 <span class="math inline"><em>x</em></span>
+的情况有三种：<strong>无解、有唯一解、有无穷解</strong></p>
+<p>若方程组有解，则称其为 <strong>相容（Consistent）</strong>；
+若是无解，则称之为 <strong>不相容（Inconsistent）</strong></p>
+<h3 id="线性方程组有解的解释">线性方程组有解的解释</h3>
+<p>首先介绍一个概念</p>
+<ul>
+<li><strong>张成的空间</strong>：对于一个向量集 <span
+class="math inline"><em>S</em></span> , 其向量的所有线性组合组成的向量集
+<span class="math inline"><em>V</em></span> ，称之为 <span
+class="math inline"><em>S</em></span> 张成的空间，记作 <span
+class="math inline"><em>S</em><em>p</em><em>a</em><em>n</em>(<em>S</em>)</span></li>
+</ul>
+<p>因此若 <span
+class="math inline"><em>A</em><em>x</em> = <em>b</em></span>
+有解，可以解释为：</p>
+<ul>
+<li><p><span class="math inline"><em>b</em></span> 是可以表示为矩阵
+<span class="math inline"><em>A</em></span> 的列向量的线性组合</p></li>
+<li><p><span class="math inline"><em>b</em></span> 再矩阵 <span
+class="math inline"><em>A</em></span> 的列向量的所张成的空间里</p></li>
+</ul>
+<h3 id="解的数量与矩阵a的关系">解的数量与矩阵A的关系</h3>
+<ul>
+<li><p>有唯一解：矩阵A的列向量线性无关，即 <span
+class="math inline"><em>R</em><em>a</em><em>n</em><em>k</em>(<em>A</em>) = <em>n</em>(<em>N</em><em>u</em><em>l</em><em>l</em><em>i</em><em>t</em><em>y</em>(<em>A</em>)=0)</span></p></li>
+<li><p>有无穷解：矩阵A的列向量线性相关，即 <span
+class="math inline"><em>R</em><em>a</em><em>n</em><em>k</em>(<em>A</em>) &lt; <em>n</em>(<em>N</em><em>u</em><em>l</em><em>l</em><em>i</em><em>t</em><em>y</em>(<em>A</em>)&gt;0)</span></p></li>
+</ul>
+<h3
+id="线性方程组求解高斯消元法gaussian-elimination">线性方程组求解：高斯消元法（Gaussian
+Elimination）</h3>
+<p>首先有线性方程组等价定理：两个线性方程组等价 <span
+class="math inline">⇔</span> 两个线性方程组有相同的解</p>
+<p><strong>高斯消元法</strong>：将增广矩阵化简为简约型阶梯形式，进而求解的方法</p>
+<ul>
+<li><p><strong>增广矩阵</strong>：将矩阵A与列向量b横向拼接起来，即 <span
+class="math inline">[<em>A</em>|<em>b</em>]</span></p></li>
+<li><p><strong>简约型阶梯形式</strong>：
+即呈阶梯状，并且每个阶梯第一位为1，具体如下图：</p></li>
+</ul>
+<figure>
+<img src="Echelon.jpg" srcset="/BLOG/img/loading.gif" lazyload alt="简约型阶梯形式示例" />
+<figcaption aria-hidden="true">简约型阶梯形式示例</figcaption>
+</figure>
+<p>若是最后化简得结果存在只有最后一列不为0得情况，则线性方程组无解;反之则有解，若是有一行全部为0，则存在无数解。</p>
+<figure>
+<img src="result.jpg" srcset="/BLOG/img/loading.gif" lazyload alt="解的分类" />
+<figcaption aria-hidden="true">解的分类</figcaption>
+</figure>
 
                 
               </div>
@@ -463,8 +474,15 @@ class="math display"><em>E</em> = <em>m</em><em>c</em><sup>2</sup></span></p
     
       <span class="category-chain">
         
-  <a href="/BLOG/categories/%E6%8A%80%E6%9C%AF%E7%AC%94%E8%AE%B0/" class="category-chain-item">技术笔记</a>
+  <a href="/BLOG/categories/%E6%95%B0%E5%AD%A6/" class="category-chain-item">数学</a>
   
+  
+    <span>></span>
+    
+  <a href="/BLOG/categories/%E6%95%B0%E5%AD%A6/%E7%BA%BF%E6%80%A7%E4%BB%A3%E6%95%B0/" class="category-chain-item">线性代数</a>
+  
+  
+
   
 
       </span>
@@ -478,9 +496,9 @@ class="math display"><em>E</em> = <em>m</em><em>c</em><sup>2</sup></span></p
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/BLOG/tags/Markdown/" class="print-no-link">#Markdown</a>
+        <a href="/BLOG/tags/%E6%95%B0%E5%AD%A6/" class="print-no-link">#数学</a>
       
-        <a href="/BLOG/tags/%E6%95%99%E7%A8%8B/" class="print-no-link">#教程</a>
+        <a href="/BLOG/tags/%E7%BA%BF%E6%80%A7%E4%BB%A3%E6%95%B0/" class="print-no-link">#线性代数</a>
       
     </div>
   
@@ -492,8 +510,8 @@ class="math display"><em>E</em> = <em>m</em><em>c</em><sup>2</sup></span></p
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>博客写入教程</div>
-      <div>https://gongzihang.github.io/2025/05/24/博客写入教程/</div>
+      <div>线性代数：矩阵与线性方程组</div>
+      <div>https://gongzihang.github.io/2025/05/25/线性代数：矩阵及其应用/</div>
     </div>
     <div class="license-meta">
       
@@ -505,7 +523,7 @@ class="math display"><em>E</em> = <em>m</em><em>c</em><sup>2</sup></span></p
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2025年5月24日</div>
+          <div>2025年5月25日</div>
         </div>
       
       
@@ -537,15 +555,15 @@ class="math display"><em>E</em> = <em>m</em><em>c</em><sup>2</sup></span></p
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/BLOG/2025/05/25/%E7%BA%BF%E6%80%A7%E4%BB%A3%E6%95%B0%EF%BC%9A%E7%9F%A9%E9%98%B5%E5%8F%8A%E5%85%B6%E5%BA%94%E7%94%A8/" title="线性代数：矩阵与线性方程组">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">线性代数：矩阵与线性方程组</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
+                    
+                      <a href="/BLOG/2025/05/24/%E5%8D%9A%E5%AE%A2%E5%86%99%E5%85%A5%E6%95%99%E7%A8%8B/" title="博客写入教程">
+                        <span class="hidden-mobile">博客写入教程</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
                     
                   </article>
                 </div>
