@@ -33,7 +33,7 @@
 <meta property="og:image" content="https://gongzihang.github.io/2025/06/11/%E6%95%B0%E6%8D%AE%E6%8C%96%E6%8E%98%E8%AF%BE%E7%A8%8B%E5%A4%8D%E4%B9%A0/解释.png">
 <meta property="og:image" content="https://gongzihang.github.io/2025/06/11/%E6%95%B0%E6%8D%AE%E6%8C%96%E6%8E%98%E8%AF%BE%E7%A8%8B%E5%A4%8D%E4%B9%A0/例题1.png">
 <meta property="article:published_time" content="2025-06-10T16:24:29.000Z">
-<meta property="article:modified_time" content="2025-06-11T13:44:36.484Z">
+<meta property="article:modified_time" content="2025-06-11T16:57:34.467Z">
 <meta property="article:author" content="Zihang Gong">
 <meta property="article:tag" content="计算机">
 <meta property="article:tag" content="数据挖掘">
@@ -244,7 +244,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          6.4k 字
+          8.1k 字
         
       </span>
     
@@ -255,7 +255,7 @@
         
         
         
-          54 分钟
+          68 分钟
         
       </span>
     
@@ -1119,8 +1119,9 @@ class="math inline"><em>O</em>(<em>k</em>(<em>n</em>−<em>k</em>)<sup>2</sup>)<
 <h3 id="clarans算法">CLARANS算法</h3>
 <h4 id="输入参数">输入参数：</h4>
 <ul>
-<li>数据集 ( D )，样本个数 ( n )</li>
-<li>聚类数 ( k )</li>
+<li>数据集 <span class="math inline"><em>D</em></span>，样本个数 <span
+class="math inline"><em>n</em></span></li>
+<li>聚类数 <span class="math inline"><em>k</em></span></li>
 <li>每轮最大尝试次数 <code>max_neighbor</code></li>
 <li>总共执行的局部搜索次数 <code>num_local</code></li>
 </ul>
@@ -1128,7 +1129,8 @@ class="math inline"><em>O</em>(<em>k</em>(<em>n</em>−<em>k</em>)<sup>2</sup>)<
 <code>num_local</code> 次）：</h4>
 <p>对于每次局部搜索：</p>
 <ol type="1">
-<li>随机选择初始的 ( k ) 个 Medoids<br />
+<li>随机选择初始的 <span class="math inline"><em>k</em></span> 个
+Medoids<br />
 </li>
 <li>当前 Medoids 作为初始解，循环尝试邻居（即交换一个 Medoid 和一个非
 Medoid）：
@@ -1179,6 +1181,271 @@ Nesting)算法</h3>
 <li>直到每个样本自成一个簇，或者达到某个终结条件。</li>
 <li>例如达到了某个希望的簇的数目或两个最近的簇之间的
 距离超过了某个阈值。</li>
+</ul>
+<h3 id="birch算法流程">BIRCH算法流程</h3>
+<p>BIRCH 是一种基于层次结构的聚类算法，适合大规模数据，使用 CF-Tree
+来压缩数据并高效聚类。</p>
+<h4 id="关键数据结构cfclustering-feature">关键数据结构：CF（Clustering
+Feature）</h4>
+<p>每个聚类用三元组表示：</p>
+<p><span
+class="math display">CF = (<em>N</em>,<strong>L</strong><strong>S</strong>,<strong>S</strong><strong>S</strong>)</span></p>
+<ul>
+<li><span class="math inline"><em>N</em></span>：簇中点数<br />
+</li>
+<li><span class="math inline">$\mathbf{LS} = \sum_{i=1}^N
+\mathbf{x}_i$</span>（点坐标线性和）<br />
+</li>
+<li><span class="math inline">$\mathbf{SS} = \sum_{i=1}^N
+\mathbf{x}_i^2$</span>（点坐标平方和）</li>
+</ul>
+<p>利用 CF 可快速计算簇的质心、半径和直径，无需访问原始点。</p>
+<h4 id="cf-tree-结构">CF-Tree 结构</h4>
+<ul>
+<li>一种平衡树，类似 B+ 树<br />
+</li>
+<li><strong>非叶节点</strong>存储子节点的 CF 信息<br />
+</li>
+<li><strong>叶子节点</strong>存储实际的 CF 条目，每个 CF
+表示一个子簇<br />
+</li>
+<li>叶子节点通过链表相连，支持顺序访问<br />
+</li>
+<li>主要参数：
+<ul>
+<li><span
+class="math inline"><em>B</em></span>：非叶节点最大子节点数<br />
+</li>
+<li><span class="math inline"><em>L</em></span>：叶子节点最大 CF
+条目数<br />
+</li>
+<li>阈值 <span class="math inline"><em>T</em></span>：限制每个 CF
+最大半径</li>
+</ul></li>
+</ul>
+<h4 id="算法流程">算法流程</h4>
+<ol type="1">
+<li><strong>初始化</strong>：设定阈值 <span
+class="math inline"><em>T</em></span>、<span
+class="math inline"><em>B</em></span>、<span
+class="math inline"><em>L</em></span>，初始化空 CF-Tree。<br />
+</li>
+<li><strong>逐点插入</strong>：
+<ul>
+<li>从根节点开始递归，找到距离点最近的叶子节点 CF。<br />
+</li>
+<li>尝试将点合并入该 CF，若合并后半径 ≤ <span
+class="math inline"><em>T</em></span>，更新 CF；否则新建 CF 条目。<br />
+</li>
+</ul></li>
+<li><strong>节点分裂</strong>：
+<ul>
+<li>叶子节点 CF 条目数超过 <span class="math inline"><em>L</em></span>
+时分裂：
+<ul>
+<li>选择两个最远的 CF 条目作为种子，重新分配其余 CF 条目。<br />
+</li>
+<li>生成两个叶子节点，更新父节点。<br />
+</li>
+</ul></li>
+<li>父节点子节点数超过 <span class="math inline"><em>B</em></span>
+时递归分裂，直到根节点。<br />
+</li>
+</ul></li>
+<li><strong>完成构建</strong>。<br />
+</li>
+<li><strong>全局聚类（可选）</strong>：对叶子节点所有 CF
+的质心进行聚类（如 K-Means）(在每个叶子节点的簇的层面再聚类)。</li>
+</ol>
+<h4 id="算法优缺点">算法优缺点</h4>
+<ul>
+<li><strong>优点</strong>：
+<ul>
+<li>只需一次扫描，速度快<br />
+</li>
+<li>数据压缩存储，节省内存<br />
+</li>
+<li>支持增量更新和大规模数据<br />
+</li>
+</ul></li>
+<li><strong>缺点</strong>：
+<ul>
+<li>对异常点敏感<br />
+</li>
+<li>结果依赖阈值 <span class="math inline"><em>T</em></span> 选取</li>
+</ul></li>
+</ul>
+<h3 id="cure算法简介含抽样处理">CURE算法简介（含抽样处理）</h3>
+<h4 id="核心思想-1">核心思想</h4>
+<ul>
+<li>用多个代表点描述簇的形状，避免用质心造成的误差<br />
+</li>
+<li>代表点收缩至簇中心以减少异常点影响<br />
+</li>
+<li>支持复杂簇结构，抗噪声能力强</li>
+</ul>
+<h4 id="算法流程-1">算法流程</h4>
+<ol type="1">
+<li><strong>抽样（Sampling）</strong>
+<ul>
+<li>从大数据中随机抽取一个代表样本子集，减小计算量</li>
+</ul></li>
+<li><strong>初始聚类</strong>
+<ul>
+<li>对抽样数据，每个点看作一个簇，或者先用快速算法做粗聚类，得到初始簇集合</li>
+</ul></li>
+<li><strong>选择代表点</strong>
+<ul>
+<li>每个簇选固定数量的代表点（如距离簇质心较远的点）</li>
+</ul></li>
+<li><strong>收缩代表点</strong>
+<ul>
+<li>将代表点沿向簇中心的方向收缩一定比例（如20%-30%）</li>
+</ul></li>
+<li><strong>合并簇</strong>
+<ul>
+<li>计算簇间代表点的最小距离，合并距离最近的两个簇</li>
+</ul></li>
+<li><strong>重复步骤 3-5</strong>
+<ul>
+<li>直到满足聚类数或者其他停止条件</li>
+</ul></li>
+<li><strong>增量聚类（可选）</strong>
+<ul>
+<li>对未抽样的数据，将每个点分配到最近的簇中，实现全量数据聚类</li>
+</ul></li>
+</ol>
+<h4 id="特点">特点</h4>
+<ul>
+<li>抽样减少计算量<br />
+</li>
+<li>代表点和收缩减少异常点影响<br />
+</li>
+<li>能处理非球形簇，结构复杂</li>
+</ul>
+<h3 id="rock-算法简介">ROCK 算法简介</h3>
+<p>ROCK（Robust Clustering using
+linKs）是一种基于邻居“链接”关系的层次聚类算法，特别适合处理类别数据和非球形簇。</p>
+<h4 id="关键概念">关键概念</h4>
+<ul>
+<li><p><strong>邻居（Neighbors）</strong><br />
+如果两个数据点之间的相似度（例如 Jaccard 相似度）超过某个阈值 <span
+class="math display"><em>θ</em></span>，则认为它们是邻居。</p></li>
+<li><p><strong>链接数（Link）</strong><br />
+两个点的链接数是它们共同邻居的数量。链接数越大，说明两点越有可能属于同一个簇。</p></li>
+<li><p><strong>Jaccard 相似度</strong><br />
+衡量两个集合相似度的指标，定义为它们交集的大小除以并集的大小，用来计算点之间的相似性。</p></li>
+<li><p><strong>好处度（Goodness Measure）</strong><br />
+用于评估合并两个簇的合理性。<br />
+计算公式为：</p>
+<p><span class="math display">$$
+Goodness(C_i, C_j) = \frac{links(C_i, C_j)}{(size(C_i) + size(C_j))^{1 +
+2f(\theta)} - size(C_i)^{1 + 2f(\theta)} - size(C_j)^{1 + 2f(\theta)}}
+$$</span></p>
+<p>其中：</p>
+<ul>
+<li><span
+class="math display"><em>l</em><em>i</em><em>n</em><em>k</em><em>s</em>(<em>C</em><sub><em>i</em></sub>,<em>C</em><sub><em>j</em></sub>)</span>
+是两个簇间所有点对的链接数之和<br />
+</li>
+<li><span
+class="math display"><em>s</em><em>i</em><em>z</em><em>e</em>(<em>C</em>)</span>
+是簇中点的数量<br />
+</li>
+<li><span class="math display"><em>f</em>(<em>θ</em>)</span>
+是阈值相关的函数，用于调节合并力度</li>
+</ul></li>
+</ul>
+<h4 id="算法流程-2">算法流程</h4>
+<ol type="1">
+<li><strong>计算邻居关系</strong>
+<ul>
+<li>对数据集中每对数据点计算相似度（如 Jaccard 相似度）。<br />
+</li>
+<li>如果相似度大于阈值 <span
+class="math display"><em>θ</em></span>，则认为它们是邻居。</li>
+</ul></li>
+<li><strong>计算链接数</strong>
+<ul>
+<li>对每对数据点，统计它们共同邻居的数量，这个数量称为“链接数”。</li>
+</ul></li>
+<li><strong>初始化簇</strong>
+<ul>
+<li>将每个数据点作为一个单独的簇。</li>
+</ul></li>
+<li><strong>计算簇间好处度</strong>
+<ul>
+<li>根据簇间所有点对的链接数以及簇大小，计算两个簇合并的好处度（Goodness
+Measure）。</li>
+</ul></li>
+<li><strong>合并簇</strong>
+<ul>
+<li>选择好处度最高的两个簇进行合并。</li>
+</ul></li>
+<li><strong>重复合并</strong>
+<ul>
+<li>不断重复计算好处度和合并操作，直到达到预定的簇数或满足其他终止条件。</li>
+</ul></li>
+</ol>
+<h4 id="特点-1">特点</h4>
+<ul>
+<li>适合类别数据和非球形簇<br />
+</li>
+<li>利用邻居链接捕捉复杂的结构关系<br />
+</li>
+<li>计算量较大，适合中小规模数据</li>
+</ul>
+<h3 id="chameleon算法">CHAMELEON算法</h3>
+<p>CHAMELEON是一种基于图的层次聚类算法，能够自动发现不同形状和密度的簇，适用于复杂数据结构。它结合了动态模型和多阶段聚类，利用簇的内部连接性和相似性来决定合并策略。</p>
+<h4 id="核心思想-2">核心思想</h4>
+<ul>
+<li>利用<strong>k-近邻图（k-NN Graph）</strong>表示数据点间的关系<br />
+</li>
+<li>通过度量簇间的<strong>相对连通性（Relative
+Connectivity）</strong>和<strong>相对相似性（Relative
+Closeness）</strong>，决定簇是否合并<br />
+</li>
+<li>动态调整合并过程，适应簇的形状和密度差异</li>
+</ul>
+<h4 id="主要概念">主要概念</h4>
+<ul>
+<li><p><strong>k-近邻图</strong><br />
+构建一个图，点为数据样本，边连接每个点的k个最近邻，边权反映点之间的相似度</p></li>
+<li><p><strong>相对连通性（Relative Connectivity, RC）</strong><br />
+衡量两个簇间连接强度相对于它们内部连接的强度</p></li>
+<li><p><strong>相对相似性（Relative Closeness, RCl）</strong><br />
+衡量两个簇之间的距离相对于它们各自的内部距离</p></li>
+</ul>
+<h4 id="算法流程-3">算法流程</h4>
+<ol type="1">
+<li><strong>构建k-近邻图</strong>
+<ul>
+<li>计算数据点间的相似度，构造加权k-近邻图</li>
+</ul></li>
+<li><strong>初始聚类</strong>
+<ul>
+<li>使用图划分方法（如基于最小割的聚类）将数据划分成多个细粒度的小簇</li>
+</ul></li>
+<li><strong>计算簇间相似度</strong>
+<ul>
+<li>对每对簇计算相对连通性（RC）和相对相似性（RCl）</li>
+</ul></li>
+<li><strong>动态合并簇</strong>
+<ul>
+<li>根据RC和RCl的综合评价，选择合适的簇对进行合并</li>
+</ul></li>
+<li><strong>重复合并</strong>
+<ul>
+<li>直到满足预设的簇数或没有合适的簇对可以合并</li>
+</ul></li>
+</ol>
+<h4 id="特点-2">特点</h4>
+<ul>
+<li>适应不同簇形状和密度<br />
+</li>
+<li>结合了局部结构和全局信息<br />
+</li>
+<li>适合处理复杂数据集，但计算复杂度较高</li>
 </ul>
 <h2 id="基于密度的聚类方法">基于密度的聚类方法</h2>
 <h2 id="基于模型的聚类方法">基于模型的聚类方法</h2>
