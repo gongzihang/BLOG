@@ -21,29 +21,28 @@
   <meta name="author" content="Zihang Gong">
   <meta name="keywords" content="">
   
-    <meta name="description" content="从这个一个博客开始，我们将进行线性代数的复习。由于是用于夏令营以及与推免考核所用，我们一些简单的定义和定理将直接带过  线性代数：矩阵与线性方程组 我们从矩阵开始复习，同时带到线性相关、子空间等概念。 我们先介绍最简单的概念，线性相关与线性无关 线性相关与线性无关 我们定义列向量 {a1, a2, a3, …，an}  线性相关(Linear Dependent)：若是存在不全">
+    <meta name="description" content="用于HITSZ 25春数据挖掘复习  概述 数据挖掘的含义 数据挖掘是从海量数据集中发现有趣的（非平凡的、隐含的、未被发现但有用的）模式、模型或知识的过程。 数据挖掘过程 知识发现的过程： 1. 数据预处理  1. 数据清洗  2. 数据集成  3. 数据选择  4. 数据变换 2. 数据挖掘 3. 模式&#x2F;模型评估 4. 知识表示 数据挖掘的应用  数据分析与">
 <meta property="og:type" content="article">
-<meta property="og:title" content="线性代数：矩阵与线性方程组">
-<meta property="og:url" content="https://gongzihang.github.io/2025/05/25/%E7%BA%BF%E6%80%A7%E4%BB%A3%E6%95%B0%EF%BC%9A%E7%9F%A9%E9%98%B5%E5%8F%8A%E5%85%B6%E5%BA%94%E7%94%A8/index.html">
+<meta property="og:title" content="数据挖掘课程复习">
+<meta property="og:url" content="https://gongzihang.github.io/2025/06/11/%E6%95%B0%E6%8D%AE%E6%8C%96%E6%8E%98%E8%AF%BE%E7%A8%8B%E5%A4%8D%E4%B9%A0/index.html">
 <meta property="og:site_name" content="Zihang Gong&#39;s Blog">
-<meta property="og:description" content="从这个一个博客开始，我们将进行线性代数的复习。由于是用于夏令营以及与推免考核所用，我们一些简单的定义和定理将直接带过  线性代数：矩阵与线性方程组 我们从矩阵开始复习，同时带到线性相关、子空间等概念。 我们先介绍最简单的概念，线性相关与线性无关 线性相关与线性无关 我们定义列向量 {a1, a2, a3, …，an}  线性相关(Linear Dependent)：若是存在不全">
+<meta property="og:description" content="用于HITSZ 25春数据挖掘复习  概述 数据挖掘的含义 数据挖掘是从海量数据集中发现有趣的（非平凡的、隐含的、未被发现但有用的）模式、模型或知识的过程。 数据挖掘过程 知识发现的过程： 1. 数据预处理  1. 数据清洗  2. 数据集成  3. 数据选择  4. 数据变换 2. 数据挖掘 3. 模式&#x2F;模型评估 4. 知识表示 数据挖掘的应用  数据分析与">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://gongzihang.github.io/2025/05/25/%E7%BA%BF%E6%80%A7%E4%BB%A3%E6%95%B0%EF%BC%9A%E7%9F%A9%E9%98%B5%E5%8F%8A%E5%85%B6%E5%BA%94%E7%94%A8/Rank.png">
-<meta property="og:image" content="https://gongzihang.github.io/2025/05/25/%E7%BA%BF%E6%80%A7%E4%BB%A3%E6%95%B0%EF%BC%9A%E7%9F%A9%E9%98%B5%E5%8F%8A%E5%85%B6%E5%BA%94%E7%94%A8/invert.jpg">
-<meta property="og:image" content="https://gongzihang.github.io/2025/05/25/%E7%BA%BF%E6%80%A7%E4%BB%A3%E6%95%B0%EF%BC%9A%E7%9F%A9%E9%98%B5%E5%8F%8A%E5%85%B6%E5%BA%94%E7%94%A8/det.jpg">
-<meta property="og:image" content="https://gongzihang.github.io/2025/05/25/%E7%BA%BF%E6%80%A7%E4%BB%A3%E6%95%B0%EF%BC%9A%E7%9F%A9%E9%98%B5%E5%8F%8A%E5%85%B6%E5%BA%94%E7%94%A8/Echelon.jpg">
-<meta property="og:image" content="https://gongzihang.github.io/2025/05/25/%E7%BA%BF%E6%80%A7%E4%BB%A3%E6%95%B0%EF%BC%9A%E7%9F%A9%E9%98%B5%E5%8F%8A%E5%85%B6%E5%BA%94%E7%94%A8/result.jpg">
-<meta property="article:published_time" content="2025-05-25T09:42:39.000Z">
-<meta property="article:modified_time" content="2025-06-11T05:18:13.909Z">
+<meta property="og:image" content="https://gongzihang.github.io/2025/06/11/%E6%95%B0%E6%8D%AE%E6%8C%96%E6%8E%98%E8%AF%BE%E7%A8%8B%E5%A4%8D%E4%B9%A0/样本.png">
+<meta property="og:image" content="https://gongzihang.github.io/2025/06/11/%E6%95%B0%E6%8D%AE%E6%8C%96%E6%8E%98%E8%AF%BE%E7%A8%8B%E5%A4%8D%E4%B9%A0/列联表.png">
+<meta property="og:image" content="https://gongzihang.github.io/2025/06/11/%E6%95%B0%E6%8D%AE%E6%8C%96%E6%8E%98%E8%AF%BE%E7%A8%8B%E5%A4%8D%E4%B9%A0/解释.png">
+<meta property="og:image" content="https://gongzihang.github.io/2025/06/11/%E6%95%B0%E6%8D%AE%E6%8C%96%E6%8E%98%E8%AF%BE%E7%A8%8B%E5%A4%8D%E4%B9%A0/例题1.png">
+<meta property="article:published_time" content="2025-06-10T16:24:29.000Z">
+<meta property="article:modified_time" content="2025-06-11T06:23:21.881Z">
 <meta property="article:author" content="Zihang Gong">
-<meta property="article:tag" content="数学">
-<meta property="article:tag" content="线性代数">
+<meta property="article:tag" content="计算机">
+<meta property="article:tag" content="数据挖掘">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://gongzihang.github.io/2025/05/25/%E7%BA%BF%E6%80%A7%E4%BB%A3%E6%95%B0%EF%BC%9A%E7%9F%A9%E9%98%B5%E5%8F%8A%E5%85%B6%E5%BA%94%E7%94%A8/Rank.png">
+<meta name="twitter:image" content="https://gongzihang.github.io/2025/06/11/%E6%95%B0%E6%8D%AE%E6%8C%96%E6%8E%98%E8%AF%BE%E7%A8%8B%E5%A4%8D%E4%B9%A0/样本.png">
   
   
   
-  <title>线性代数：矩阵与线性方程组 - Zihang Gong&#39;s Blog</title>
+  <title>数据挖掘课程复习 - Zihang Gong&#39;s Blog</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -222,7 +221,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="线性代数：矩阵与线性方程组"></span>
+            <span id="subtitle" data-typed-text="数据挖掘课程复习"></span>
           
         </div>
 
@@ -233,8 +232,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2025-05-25 17:42" pubdate>
-          2025年5月25日 下午
+        <time datetime="2025-06-11 00:24" pubdate>
+          2025年6月11日 凌晨
         </time>
       </span>
     
@@ -245,7 +244,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          1.3k 字
+          1.9k 字
         
       </span>
     
@@ -256,7 +255,7 @@
         
         
         
-          11 分钟
+          17 分钟
         
       </span>
     
@@ -293,171 +292,291 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">线性代数：矩阵与线性方程组</h1>
+            <h1 id="seo-header">数据挖掘课程复习</h1>
             
             
               <div class="markdown-body">
                 
                 <blockquote>
-<p>从这个一个博客开始，我们将进行线性代数的复习。由于是用于夏令营以及与推免考核所用，我们一些简单的定义和定理将直接带过</p>
+<p>用于HITSZ 25春数据挖掘复习</p>
 </blockquote>
-<h1 id="线性代数矩阵与线性方程组">线性代数：矩阵与线性方程组</h1>
-<p>我们从矩阵开始复习，同时带到线性相关、子空间等概念。</p>
-<p>我们先介绍最简单的概念，线性相关与线性无关</p>
-<h2 id="线性相关与线性无关">线性相关与线性无关</h2>
-<p>我们定义列向量 <span
-class="math inline">{<em>a</em><sub>1</sub>, <em>a</em><sub>2</sub>, <em>a</em><sub>3</sub>, …，<em>a</em><sub><em>n</em></sub>}</span></p>
+<h1 id="概述">概述</h1>
+<h2 id="数据挖掘的含义">数据挖掘的含义</h2>
+<p>数据挖掘是从海量数据集中发现有趣的（<mark>非平凡的、隐含的、未被发现但有用的</mark>）模式、模型或知识的过程。</p>
+<h2 id="数据挖掘过程">数据挖掘过程</h2>
+<p>知识发现的过程：<br />
+1. 数据预处理<br />
+ 1. 数据清洗<br />
+ 2. 数据集成<br />
+ 3. 数据选择<br />
+ 4. 数据变换<br />
+2. 数据挖掘<br />
+3. 模式/模型评估<br />
+4. 知识表示</p>
+<h2 id="数据挖掘的应用">数据挖掘的应用</h2>
 <ul>
-<li><p><strong>线性相关(Linear Dependent)</strong>：若是存在不全为
-<strong>0</strong> 的向量 <span
-class="math inline"><em>X</em> = {<em>x</em><sub>1</sub>, <em>x</em><sub>2</sub>, <em>x</em><sub>3</sub>, …, <em>x</em><sub><em>n</em></sub>}</span>
-满足 <span
-class="math inline"><em>x</em><sub>1</sub><em>a</em><sub>1</sub> + <em>x</em><sub>2</sub><em>a</em><sub>2</sub> + <em>x</em><sub>3</sub><em>a</em><sub>3</sub> + … + <em>x</em><sub><em>n</em></sub><em>a</em><sub><em>n</em></sub> = 0</span>，
-则称列向量<span
-class="math inline">{<em>a</em><sub>1</sub>, <em>a</em><sub>2</sub>, <em>a</em><sub>3</sub>, …，<em>a</em><sub><em>n</em></sub>}</span>
-线性相关</p></li>
-<li><p><strong>线性无关(Linear Independent)</strong>：
-与上述相反，如果不存在不全为 <strong>0</strong> 的向量 <span
-class="math inline"><em>X</em> = {<em>x</em><sub>1</sub>, <em>x</em><sub>2</sub>, <em>x</em><sub>3</sub>, …, <em>x</em><sub><em>n</em></sub>}</span>满足条件，则称之为线性无关</p></li>
-</ul>
-<p>随后我们简单回顾矩阵，矩阵的定义从向量导入，如果矩阵有m行和n列，我们就说矩阵的大小为<span
-class="math inline"><em>m</em> * <em>n</em></span>，如果<span
-class="math inline"><em>m</em> = <em>n</em></span>，我们称为方阵（<strong>square
-matrix</strong>）</p>
-<h2 id="矩阵的计算">矩阵的计算</h2>
-<p>这里我们简单介绍矩阵的而一些计算与属性</p>
+<li>数据分析与决策支持
 <ul>
-<li><p>矩阵和标量相乘，即每个元素和标量相乘</p></li>
-<li><p>矩阵（向量）和矩阵（向量）相乘， 即按照顺序依次相乘</p>
-<ul>
-<li>若<span
-class="math inline"><em>A</em><em>B</em> = <em>B</em><em>A</em></span>，则称A与B乘法可交换。n阶单位矩阵E与任何n阶矩阵乘法可交换</li>
+<li>客户画像、需求分析</li>
+<li>交叉市场分析</li>
 </ul></li>
-<li><p>矩阵的分块乘法</p></li>
-<li><p>矩阵<strong>转置</strong></p></li>
-<li><p>矩阵<strong>共轭</strong>:
-即矩阵内每个元素取其共轭的结果</p></li>
-<li><p>矩阵的<strong>秩（Rank)</strong>:
-矩阵列向量中最大的线性无关的数目（The maximum number of Linear
-Independent columns)</p></li>
-<li><p>矩阵的<strong>零化度（Nullity）：</strong>
-矩阵的列数减去矩阵的秩</p></li>
-</ul>
-<h3 id="矩阵的逆">矩阵的逆</h3>
-<p>如果两个方阵A和B的乘积是单位矩阵，AB=I，那么A和B就是互为逆矩阵</p>
-<p>矩阵的逆有如下定义：</p>
+<li>风险分析与管理
 <ul>
-<li><p><span
-class="math inline">(<em>A</em><sup>−1</sup>)<sup>−1</sup> = <em>A</em></span></p></li>
-<li><p><span
-class="math inline">(<em>k</em><em>A</em>)<sup>−1</sup> = <em>k</em><sup>−1</sup><em>A</em><sup>−1</sup></span></p></li>
-<li><p><span
-class="math inline">(<em>A</em><sup><em>T</em></sup>)<sup>−1</sup> = (<em>A</em><sup>−1</sup>)<sup><em>T</em></sup></span></p></li>
-<li><p><span
-class="math inline">(<em>A</em><em>B</em>)<sup>−1</sup> = <em>B</em><sup>−1</sup><em>A</em><sup>−1</sup></span></p></li>
-</ul>
-<p>矩阵的逆还有如下的性质（需要牢记）：</p>
-<figure>
-<img src="Rank.png" srcset="/BLOG/img/loading.gif" lazyload alt="矩阵逆的性质" />
-<figcaption aria-hidden="true">矩阵逆的性质</figcaption>
-</figure>
-<p>对于一个方阵，其可逆判别可用如下任意一条：</p>
-<figure>
-<img src="invert.jpg" srcset="/BLOG/img/loading.gif" lazyload alt="矩阵可逆的判别" />
-<figcaption aria-hidden="true">矩阵可逆的判别</figcaption>
-</figure>
-<h3 id="矩阵的行列式">矩阵的行列式</h3>
-<p>具体计算我们带过，我们讨论一下行列式的性质</p>
+<li>竞争分析</li>
+<li>风险评估</li>
+<li>资产管理</li>
+<li>资源规划</li>
+</ul></li>
+<li>欺诈检测与异常模式挖掘
 <ul>
-<li><p>交换任意两行，行列式取负号</p></li>
-<li><p>行列式的标量乘法： <span
-class="math inline"><em>d</em><em>e</em><em>t</em>(2<em>A</em>) = 2<sup><em>n</em></sup><em>d</em><em>e</em><em>t</em>(<em>A</em>)</span></p></li>
-<li><p>矩阵乘法的行列式：</p></li>
+<li>医疗、电信等</li>
+</ul></li>
 </ul>
-<figure>
-<img src="det.jpg" srcset="/BLOG/img/loading.gif" lazyload alt="矩阵乘法的行列式" />
-<figcaption aria-hidden="true">矩阵乘法的行列式</figcaption>
-</figure>
+<h2 id="数据仓库">数据仓库</h2>
+<p><strong>定义</strong>：数据仓库是<mark>面向主题的、集成的、随时间变化的、又相对稳定的</mark>数据集合，它支持管理层的决策过程<br />
+<strong>数据仓库的关键特征</strong>：</p>
 <ul>
-<li><p>如果一个方阵的行列式不为0，那么它是可逆的，反之，如果一个方阵可逆，那么它的行列式不为0</p></li>
-<li><p><span class="math inline">$\bullet
-A^{-1}=\frac{1}{det(A)}C^T$</span> 其中<span
-class="math inline"><em>C</em></span>为伴随矩阵，具体如下</p></li>
+<li>面向主题的：
+<ul>
+<li>数据仓库的数据是以分析的主题为中心构建的</li>
+</ul></li>
+<li>集成的：
+<ul>
+<li>数据仓库的数据来自不同的数据源，需要按照统一的结构、格式、度量、语义进行数据处理，最后集成到数据仓库的主题</li>
+</ul></li>
+<li>随时间变化的：
+<ul>
+<li>数据仓库的历史数据，需要随时间延长而增加（周期性更新）</li>
+<li>数据仓库的综合数据，需要随时间延长而变化</li>
+</ul></li>
+<li>相对稳定的：
+<ul>
+<li>数据仓库的数据主要用于支持决策，不会涉及频繁的修改与变化，主要是查询与分析。</li>
+</ul></li>
 </ul>
-<p><span class="math display">$$C=
-\begin{bmatrix}
-c_{11} &amp; \cdots &amp; c_{1n} \\
-\vdots &amp; \ddots &amp; \vdots \\
-c_{n1} &amp; \cdots &amp; c_{nn}
-\end{bmatrix}$$</span></p>
+<hr />
+<h1 id="数据特征分析与预处理">数据特征分析与预处理</h1>
+<h2 id="数据类型及其特征">数据类型及其特征</h2>
+<h2 id="数据对象">数据对象：</h2>
+<p>数据集由数据对象构成，数据对象又称之为样本、实例。</p>
+<figure>
+<img src="样本.png" srcset="/BLOG/img/loading.gif" lazyload alt="数据样本示意图" />
+<figcaption aria-hidden="true">数据样本示意图</figcaption>
+</figure>
+<h2 id="属性类型">属性类型</h2>
+<p><strong>定义</strong>：一个数据字段，表示一个数据对象的某个特征</p>
+<p><strong>分类</strong>：</p>
+<ul>
+<li><p><strong>标称属性:</strong> 与名称相关的值、分类或枚举属性
+<mark>(定性的)</mark></p>
+<ul>
+<li><strong>二元属性:</strong>
+标称属性的一种特殊情况，只有2个状态的标称属性。</li>
+</ul></li>
+<li><p><strong>序数属性:</strong> 值有一个有意义的顺序
+<mark>(定性的)</mark></p></li>
+<li><p><strong>数值属性:</strong> 可度量的量 <mark>(定量的)</mark></p>
+<ul>
+<li><strong>区间标度属性:</strong>
+<ul>
+<li>在统一度量的尺度下</li>
+<li>值有序（e.g. 日历日期， 温度计数据）</li>
+<li>没有固有0点</li>
+</ul></li>
+<li><strong>比率标度属性：</strong>
+<ul>
+<li>具有固有零点，可以说一个值是一个值得多少倍</li>
+<li>举例：字数、体重、工作年限</li>
+</ul></li>
+</ul></li>
+</ul>
+<h2 id="数据的描述统计">数据的描述统计</h2>
+<ul>
+<li><strong>数据离散特征：</strong>
+均值、众数、最值、分位数、方差、离群点……</li>
+<li><strong>排序区间：</strong>
+<ul>
+<li>数据离散度： 多个粒度上得分析</li>
+<li>排序区间得盆图/分位数图分析</li>
+</ul></li>
+</ul>
+<p><strong>描述统计的图形显示：</strong>
+箱型图、直方图、分位数图、散点图</p>
+<h2 id="数据可视化方法">数据可视化方法</h2>
+<p><strong>数据可视化方法得分类：</strong></p>
+<ul>
+<li>基于像素的可视化技术
+<ul>
+<li>协方差矩阵的热力图</li>
+</ul></li>
+<li>基于几何投影的可视化技术
+<ul>
+<li>直接可视化、散点图、透视地形、平行坐标</li>
+</ul></li>
+<li>基于图标的可视化技术
+<ul>
+<li>脸谱图、人物画像图</li>
+</ul></li>
+<li>基于分层的可视化技术
+<ul>
+<li>树状图、<em>锥形树</em></li>
+</ul></li>
+<li>可视化复杂数据与关系
+<ul>
+<li>标签云、线形图、饼图、结构图/流程图、<em>怪图、系统进化图</em></li>
+</ul></li>
+</ul>
+<h2 id="测量数据的相似性和相异性">测量数据的相似性和相异性</h2>
+<ul>
+<li><strong>相似性：</strong> 度量数据的相似程度，越大越相似，通常范围在
+<span class="math display">[0,1]</span></li>
+<li><strong>相异性：</strong>
+(e.g. distance)，度量数据的差异，最小值通常为0 ，越大差异越大</li>
+</ul>
+<p><strong>相异度矩阵：</strong>
+对角线为0的下三角矩阵，元素为对应对象之间的距离 <img
+src="相异度矩阵.png" srcset="/BLOG/img/loading.gif" lazyload alt="相异度矩阵矩阵" /></p>
+<h3 id="标称属性的邻近度量">标称属性的邻近度量</h3>
+<ul>
+<li><p>得分匹配：</p>
+<p><span class="math display">$$d(i,j) = \frac{p - m}{p}$$</span></p>
+<p>其中 <span class="math inline"><em>m</em></span>
+为相同变量数量，<span class="math inline"><em>p</em></span>
+为变量总数。</p></li>
+<li><p>独热编码：<br />
+具体而言即将名称或类别转化为独热编码，随后利用编码计算距离</p></li>
+</ul>
+<h3 id="二进制属性的度量">二进制属性的度量</h3>
+<figure>
+<img src="列联表.png" srcset="/BLOG/img/loading.gif" lazyload alt="列联表" />
+<figcaption aria-hidden="true">列联表</figcaption>
+</figure>
+<p><strong>对称二元变量距离：</strong> <span class="math inline">$d(i,j)
+= \frac{r+s}{q+r+s+t}$</span></p>
+<p><strong>不对称二元变量距离：</strong> <span
+class="math inline">$d(i,j) = \frac{r+s}{q+r+s}$</span></p>
+<p><strong>Jaccard系数(不对称二元变量相似性)：</strong> <span
+class="math inline">$Sim_{Jaccard}(i,j) = \frac{q}{q+r+s}$</span></p>
+<p><strong>TIP:</strong> 解释一下这个对称的含义，关键在于0是否有意义
+<img src="解释.png" srcset="/BLOG/img/loading.gif" lazyload alt="对称的含义解释" /></p>
+<h4
+id="例题二进制属性的非对称相异性度量">例题：二进制属性的非对称相异性度量</h4>
+<figure>
+<img src="例题1.png" srcset="/BLOG/img/loading.gif" lazyload alt="二进制属性的非对称相异性度量" />
+<figcaption aria-hidden="true">二进制属性的非对称相异性度量</figcaption>
+</figure>
+<h3 id="数值属性的度量">数值属性的度量</h3>
+<p><strong>闵可夫斯基距离公式：</strong></p>
+<p><span class="math display">$$D(X, Y) = \left( \sum_{i=1}^n |x_i -
+y_i|^p \right)^{\frac{1}{p}}$$</span></p>
 <p>其中 <span
-class="math inline"><em>c</em><sub><em>i</em><em>j</em></sub> = (−1)<sup><em>i</em> + <em>j</em></sup><em>d</em><em>e</em><em>t</em>(<em>A</em><sub><em>i</em><em>j</em></sub>)</span>
-为代数余子式</p>
-<h3 id="初等矩阵">初等矩阵</h3>
-<p><strong>初等矩阵</strong>： 对单位矩阵进行一次变换后的矩阵</p>
-<p>相关定理（<strong>左行右列</strong>）：</p>
+class="math inline"><em>p</em> ≥ 1</span>，是可调节的距离参数。</p>
+<p>主要使用上述公式度量，其中有一些特例可以参照下图： <img
+src="距离.png" srcset="/BLOG/img/loading.gif" lazyload alt="闵可夫斯基距离公式特例" /></p>
+<h3 id="区间尺度与有序变量的度量">区间尺度与有序变量的度量</h3>
 <ul>
-<li><p>对A施行初等<strong>行变换</strong>，其结果等于在A左边乘以相应的初等矩阵；</p></li>
-<li><p>对A施行初等<strong>列变换</strong>，其结果等于在A右边乘以相应的初等矩阵</p></li>
-<li><p>n阶方阵可逆的<strong>充要条件</strong>是它能表示成一些初等矩阵的乘积</p></li>
+<li>区间尺度：进行归一化或标准化处理随后计算闵可夫斯基距离</li>
+<li>有序变量：使用排序代替值，并对排序值做最值归一化，随后计算闵可夫斯基距离</li>
 </ul>
-<h2 id="线性方程组">线性方程组</h2>
-<p>我们借助矩阵带一下线性方程组的相关概念与性质</p>
-<p><strong>我们可以用矩阵表达一个线性方程组，即： <span
-class="math inline"><em>A</em><em>x</em> = <em>b</em></span>
-,其中A为矩阵，<span
-class="math inline"><em>x</em>, <em>b</em></span>分别为对应维度的列向量</strong></p>
-<h3 id="解的情况与相容性">解的情况与相容性</h3>
-<p>线性方程组解 <span class="math inline"><em>x</em></span>
-的情况有三种：<strong>无解、有唯一解、有无穷解</strong></p>
-<p>若方程组有解，则称其为 <strong>相容（Consistent）</strong>；
-若是无解，则称之为 <strong>不相容（Inconsistent）</strong></p>
-<h3 id="线性方程组有解的解释">线性方程组有解的解释</h3>
-<p>首先介绍一个概念</p>
+<h3 id="其他度量方法">其他度量方法：</h3>
+<h4 id="余弦相似度">余弦相似度：</h4>
+<p><span class="math display">$$
+\text{cos}(\theta) = \frac{\sum_{i=1}^{n} A_i B_i}{\sqrt{\sum_{i=1}^{n}
+A_i^2} \cdot \sqrt{\sum_{i=1}^{n} B_i^2}}
+$$</span></p>
+<p>用于衡量两个向量方向的相似程度，常用于文本分类、推荐系统等。</p>
+<h4 id="kl-散度kullback-leibler-divergence">KL 散度（Kullback-Leibler
+Divergence）：</h4>
+<p><span class="math display">$$
+D_{KL}(P \parallel Q) = \sum_{i=1}^{n} p_i \log \frac{p_i}{q_i}
+$$</span></p>
+<p>衡量两个概率分布之间的差异，常用于模型分布与目标分布之间的对比。</p>
+<hr />
+<h2 id="数据预处理">数据预处理</h2>
+<p><strong>目的：</strong>
+数据存在不完全、噪音、不一致的问题，高质量的数据挖掘依赖高质量的数据</p>
+<h3 id="数据预处理的主要任务">数据预处理的主要任务：</h3>
 <ul>
-<li><strong>张成的空间</strong>：对于一个向量集 <span
-class="math inline"><em>S</em></span> , 其向量的所有线性组合组成的向量集
-<span class="math inline"><em>V</em></span> ，称之为 <span
-class="math inline"><em>S</em></span> 张成的空间，记作 <span
-class="math inline"><em>S</em><em>p</em><em>a</em><em>n</em>(<em>S</em>)</span></li>
-</ul>
-<p>因此若 <span
-class="math inline"><em>A</em><em>x</em> = <em>b</em></span>
-有解，可以解释为：</p>
+<li><strong>数据清理：</strong> 异常值、缺失值、噪音
 <ul>
-<li><p><span class="math inline"><em>b</em></span> 是可以表示为矩阵
-<span class="math inline"><em>A</em></span> 的列向量的线性组合</p></li>
-<li><p><span class="math inline"><em>b</em></span> 再矩阵 <span
-class="math inline"><em>A</em></span> 的列向量的所张成的空间里</p></li>
-</ul>
-<h3 id="解的数量与矩阵a的关系">解的数量与矩阵A的关系</h3>
+<li>针对缺失值：删除整个样本、均值或聚类填充</li>
+<li>针对异常值与噪音： 通过分箱、聚类、回归去除</li>
+</ul></li>
+<li><strong>数据集成：</strong> 多个来源合到一起</li>
+<li><strong>数据变换：</strong> 归一化等操作</li>
+<li><strong>数据归约：</strong> 减小数据的冗余
 <ul>
-<li><p>有唯一解：矩阵A的列向量线性无关，即 <span
-class="math inline"><em>R</em><em>a</em><em>n</em><em>k</em>(<em>A</em>) = <em>n</em>(<em>N</em><em>u</em><em>l</em><em>l</em><em>i</em><em>t</em><em>y</em>(<em>A</em>)=0)</span></p></li>
-<li><p>有无穷解：矩阵A的列向量线性相关，即 <span
-class="math inline"><em>R</em><em>a</em><em>n</em><em>k</em>(<em>A</em>) &lt; <em>n</em>(<em>N</em><em>u</em><em>l</em><em>l</em><em>i</em><em>t</em><em>y</em>(<em>A</em>)&gt;0)</span></p></li>
-</ul>
-<h3
-id="线性方程组求解高斯消元法gaussian-elimination">线性方程组求解：高斯消元法（Gaussian
-Elimination）</h3>
-<p>首先有线性方程组等价定理：两个线性方程组等价 <span
-class="math inline">⇔</span> 两个线性方程组有相同的解</p>
-<p><strong>高斯消元法</strong>：将增广矩阵化简为简约型阶梯形式，进而求解的方法</p>
+<li>维度规约： 减少无用特征，或产生新的特征代替原来的
 <ul>
-<li><p><strong>增广矩阵</strong>：将矩阵A与列向量b横向拼接起来，即 <span
-class="math inline">[<em>A</em>|<em>b</em>]</span></p></li>
-<li><p><strong>简约型阶梯形式</strong>：
-即呈阶梯状，并且每个阶梯第一位为1，具体如下图：</p></li>
+<li>决策树规约、PCA</li>
+</ul></li>
+<li>数值规约：减小数据量，例如用模型参数+离群点代替原始数据
+<ul>
+<li>线性回归、聚类</li>
+</ul></li>
+<li>数据压缩</li>
+</ul></li>
+<li><strong>数据离散化和概念分层：</strong>
+<ul>
+<li>连续变量离散化</li>
+<li>人为指定偏序关系</li>
+</ul></li>
 </ul>
-<figure>
-<img src="Echelon.jpg" srcset="/BLOG/img/loading.gif" lazyload alt="简约型阶梯形式示例" />
-<figcaption aria-hidden="true">简约型阶梯形式示例</figcaption>
-</figure>
-<p>若是最后化简得结果存在只有最后一列不为0得情况，则线性方程组无解;反之则有解，若是有一行全部为0，则存在无数解。</p>
-<figure>
-<img src="result.jpg" srcset="/BLOG/img/loading.gif" lazyload alt="解的分类" />
-<figcaption aria-hidden="true">解的分类</figcaption>
-</figure>
+<hr />
+<h1 id="关联规则">关联规则</h1>
+<h2 id="关联规则挖掘概念">关联规则挖掘概念</h2>
+<p>一种从事务数据集中发现项与项之间有趣关系的技术，形式为：</p>
+<p><span
+class="math display"><em>X</em> ⇒ <em>Y</em>,  <em>X</em> ∩ <em>Y</em> = ∅</span></p>
+<h3 id="支持度support">支持度（Support）：</h3>
+<p><span class="math display">$$
+\text{Support}(X \Rightarrow Y) = \frac{\text{包含 } X \cup Y \text{
+的事务数}}{\text{总事务数}}
+$$</span></p>
+<h3 id="置信度confidence">置信度（Confidence）：</h3>
+<p><span class="math display">$$
+\text{Confidence}(X \Rightarrow Y) = \frac{\text{Support}(X \cup
+Y)}{\text{Support}(X)} = P(Y|X)
+$$</span></p>
+<h3 id="提升度lift">提升度（Lift）：</h3>
+<p><span class="math display">$$
+\text{Lift}(X \Rightarrow Y) =\frac{\text{Confidence}(X \Rightarrow
+Y)}{\text{Support}(Y)} =  \frac{P(Y|X)}{P(Y)}
+$$</span></p>
+<p>Lift &gt; 1 表示正相关，=1 表示独立，&lt;1 表示负相关。</p>
+<h2 id="频繁项集与其分类">频繁项集与其分类</h2>
+<h3 id="频繁项集">频繁项集：</h3>
+<p>如果一个项集 <span class="math inline"><em>X</em></span>
+的支持度满足：</p>
+<p><span class="math display">Support(<em>X</em>) ≥ min_sup</span></p>
+<p>则 <span class="math inline"><em>X</em></span> 是频繁项集。</p>
+<h3 id="闭频繁项集closed">闭频繁项集（Closed）：</h3>
+<p>项集 <span class="math inline"><em>X</em></span>
+是闭的，当不存在一个超集 <span
+class="math inline"><em>Y</em> ⊃ <em>X</em></span>，使得：</p>
+<p><span
+class="math display">Support(<em>Y</em>) = Support(<em>X</em>)</span></p>
+<h3 id="极大频繁项集maximal">极大频繁项集（Maximal）：</h3>
+<p>项集 <span class="math inline"><em>X</em></span>
+是极大的，当不存在一个超集 <span
+class="math inline"><em>Y</em> ⊃ <em>X</em></span> 是频繁的。</p>
+<h3 id="三者关系">三者关系：</h3>
+<ul>
+<li>极大频繁项集 ⊆ 闭频繁项集 ⊆ 所有频繁项集；</li>
+<li>闭项集压缩信息不丢失，极大项集压缩更彻底但不保留精确支持度。</li>
+</ul>
+<h2 id="关联规则基本模型">关联规则基本模型</h2>
+<p>关联规则是指同时满足最小支持度和最小置信度阈值的规则，形式如下：</p>
+<p><span
+class="math display"><em>X</em> ⇒ <em>Y</em>,  <em>X</em> ∩ <em>Y</em> = ∅</span></p>
+<h3 id="挖掘流程">挖掘流程：</h3>
+<ol type="1">
+<li>找出所有频繁项集（满足 <span
+class="math inline">Support ≥ min_sup</span>）；</li>
+<li>从频繁项集中生成所有满足 <span
+class="math inline">Confidence ≥ min_conf</span> 的规则。</li>
+</ol>
+<p>只有同时满足这两个条件的规则，才被称为“强规则”。</p>
 
                 
               </div>
@@ -476,12 +595,12 @@ class="math inline">[<em>A</em>|<em>b</em>]</span></p></li>
     
       <span class="category-chain">
         
-  <a href="/BLOG/categories/%E6%95%B0%E5%AD%A6/" class="category-chain-item">数学</a>
+  <a href="/BLOG/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA/" class="category-chain-item">计算机</a>
   
   
     <span>></span>
     
-  <a href="/BLOG/categories/%E6%95%B0%E5%AD%A6/%E7%BA%BF%E6%80%A7%E4%BB%A3%E6%95%B0/" class="category-chain-item">线性代数</a>
+  <a href="/BLOG/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA/%E6%95%B0%E6%8D%AE%E6%8C%96%E6%8E%98/" class="category-chain-item">数据挖掘</a>
   
   
 
@@ -498,9 +617,9 @@ class="math inline">[<em>A</em>|<em>b</em>]</span></p></li>
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/BLOG/tags/%E6%95%B0%E5%AD%A6/" class="print-no-link">#数学</a>
+        <a href="/BLOG/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA/" class="print-no-link">#计算机</a>
       
-        <a href="/BLOG/tags/%E7%BA%BF%E6%80%A7%E4%BB%A3%E6%95%B0/" class="print-no-link">#线性代数</a>
+        <a href="/BLOG/tags/%E6%95%B0%E6%8D%AE%E6%8C%96%E6%8E%98/" class="print-no-link">#数据挖掘</a>
       
     </div>
   
@@ -512,8 +631,8 @@ class="math inline">[<em>A</em>|<em>b</em>]</span></p></li>
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>线性代数：矩阵与线性方程组</div>
-      <div>https://gongzihang.github.io/2025/05/25/线性代数：矩阵及其应用/</div>
+      <div>数据挖掘课程复习</div>
+      <div>https://gongzihang.github.io/2025/06/11/数据挖掘课程复习/</div>
     </div>
     <div class="license-meta">
       
@@ -525,7 +644,7 @@ class="math inline">[<em>A</em>|<em>b</em>]</span></p></li>
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2025年5月25日</div>
+          <div>2025年6月11日</div>
         </div>
       
       
@@ -557,18 +676,12 @@ class="math inline">[<em>A</em>|<em>b</em>]</span></p></li>
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/BLOG/2025/06/11/%E6%95%B0%E6%8D%AE%E6%8C%96%E6%8E%98%E8%AF%BE%E7%A8%8B%E5%A4%8D%E4%B9%A0/" title="数据挖掘课程复习">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">数据挖掘课程复习</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/BLOG/2025/05/24/%E5%8D%9A%E5%AE%A2%E5%86%99%E5%85%A5%E6%95%99%E7%A8%8B/" title="博客写入教程">
-                        <span class="hidden-mobile">博客写入教程</span>
+                      <a href="/BLOG/2025/05/25/%E7%BA%BF%E6%80%A7%E4%BB%A3%E6%95%B0%EF%BC%9A%E7%9F%A9%E9%98%B5%E5%8F%8A%E5%85%B6%E5%BA%94%E7%94%A8/" title="线性代数：矩阵与线性方程组">
+                        <span class="hidden-mobile">线性代数：矩阵与线性方程组</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
