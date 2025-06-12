@@ -32,8 +32,10 @@
 <meta property="og:image" content="https://gongzihang.github.io/2025/06/11/%E6%95%B0%E6%8D%AE%E6%8C%96%E6%8E%98%E8%AF%BE%E7%A8%8B%E5%A4%8D%E4%B9%A0/列联表.png">
 <meta property="og:image" content="https://gongzihang.github.io/2025/06/11/%E6%95%B0%E6%8D%AE%E6%8C%96%E6%8E%98%E8%AF%BE%E7%A8%8B%E5%A4%8D%E4%B9%A0/解释.png">
 <meta property="og:image" content="https://gongzihang.github.io/2025/06/11/%E6%95%B0%E6%8D%AE%E6%8C%96%E6%8E%98%E8%AF%BE%E7%A8%8B%E5%A4%8D%E4%B9%A0/例题1.png">
+<meta property="og:image" content="https://gongzihang.github.io/2025/06/11/%E6%95%B0%E6%8D%AE%E6%8C%96%E6%8E%98%E8%AF%BE%E7%A8%8B%E5%A4%8D%E4%B9%A0/p.png">
+<meta property="og:image" content="https://gongzihang.github.io/2025/06/11/%E6%95%B0%E6%8D%AE%E6%8C%96%E6%8E%98%E8%AF%BE%E7%A8%8B%E5%A4%8D%E4%B9%A0/可达距离.jpg">
 <meta property="article:published_time" content="2025-06-10T16:24:29.000Z">
-<meta property="article:modified_time" content="2025-06-11T16:57:34.467Z">
+<meta property="article:modified_time" content="2025-06-12T02:55:02.351Z">
 <meta property="article:author" content="Zihang Gong">
 <meta property="article:tag" content="计算机">
 <meta property="article:tag" content="数据挖掘">
@@ -244,7 +246,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          8.1k 字
+          9.4k 字
         
       </span>
     
@@ -255,7 +257,7 @@
         
         
         
-          68 分钟
+          79 分钟
         
       </span>
     
@@ -1448,6 +1450,260 @@ Closeness）</strong>，决定簇是否合并<br />
 <li>适合处理复杂数据集，但计算复杂度较高</li>
 </ul>
 <h2 id="基于密度的聚类方法">基于密度的聚类方法</h2>
+<h3 id="密度的概念">密度的概念</h3>
+<h4 id="ε-邻域epsilon-neighborhood">1. ε-邻域（Epsilon
+Neighborhood）</h4>
+<ul>
+<li>给定一个点 <span class="math display"><em>p</em></span>，其
+<strong>ε-邻域</strong> 是所有与点 <span
+class="math display"><em>p</em></span> 距离不超过 <span
+class="math display"><em>ε</em></span> 的点的集合。</li>
+<li>通俗地说，就是以点 <span class="math display"><em>p</em></span>
+为圆心，半径为 <span class="math display"><em>ε</em></span>
+的“圆”里有谁。</li>
+</ul>
+<h4 id="核心对象core-object">2. 核心对象（Core Object）</h4>
+<ul>
+<li>如果一个点的 ε-邻域内至少包含
+<strong>MinPts</strong>（最小点数，包括它自己）个点，则称它为<strong>核心对象</strong>。</li>
+<li>它说明该区域“密度足够大”。</li>
+</ul>
+<h4 id="直接密度可达directly-density-reachable-ddr">3.
+直接密度可达（Directly Density-Reachable, DDR）</h4>
+<ul>
+<li>如果点 <span class="math display"><em>p</em></span> 在点 <span
+class="math display"><em>q</em></span> 的 ε-邻域内，<strong>且 <span
+class="math display"><em>q</em></span>
+是核心对象</strong>，那么我们说：<br />
+<strong>点 <span class="math display"><em>p</em></span> 是从点 <span
+class="math display"><em>q</em></span> 直接密度可达的</strong>。</li>
+<li>注意：只有从核心对象出发，才能有“直接密度可达”。</li>
+</ul>
+<h4 id="密度可达density-reachable">4. 密度可达（Density-Reachable）</h4>
+<ul>
+<li>如果存在一条由多个点组成的链 <span
+class="math display"><em>p</em><sub>1</sub>, <em>p</em><sub>2</sub>, ..., <em>p</em><sub><em>n</em></sub></span>，使得：
+<ul>
+<li><span
+class="math display"><em>p</em><sub>1</sub> = <em>q</em></span>，<span
+class="math display"><em>p</em><sub><em>n</em></sub> = <em>p</em></span>；</li>
+<li>对于每对相邻点 <span
+class="math display"><em>p</em><sub><em>i</em></sub></span> 和 <span
+class="math display"><em>p</em><sub><em>i</em> + 1</sub></span>，都有
+<span class="math display"><em>p</em><sub><em>i</em> + 1</sub></span>
+是从 <span class="math display"><em>p</em><sub><em>i</em></sub></span>
+<strong>直接密度可达</strong>的；</li>
+</ul></li>
+<li>那么我们说：<strong>点 <span class="math display"><em>p</em></span>
+是从点 <span class="math display"><em>q</em></span>
+密度可达的</strong>。</li>
+</ul>
+<blockquote>
+<p>这个关系是<strong>单向的</strong>：即 <span
+class="math display"><em>p</em></span> 从 <span
+class="math display"><em>q</em></span> 可达，不代表 <span
+class="math display"><em>q</em></span> 从 <span
+class="math display"><em>p</em></span> 可达。</p>
+</blockquote>
+<h4 id="密度相连density-connected">5. 密度相连（Density-Connected）</h4>
+<ul>
+<li>如果存在某个点 <span class="math display"><em>o</em></span>，使得：
+<ul>
+<li>点 <span class="math display"><em>p</em></span> 和点 <span
+class="math display"><em>q</em></span> 都是从 <span
+class="math display"><em>o</em></span> 密度可达的；</li>
+</ul></li>
+<li>那么我们说：<strong>点 <span class="math display"><em>p</em></span>
+和点 <span class="math display"><em>q</em></span>
+是密度相连的</strong>。</li>
+</ul>
+<blockquote>
+<p>这个关系是<strong>对称的</strong>，用于判断是否属于同一个簇。</p>
+</blockquote>
+<h4 id="示例">示例</h4>
+<figure>
+<img src="p.png" srcset="/BLOG/img/loading.gif" lazyload alt="密度相关概念的例子" />
+<figcaption aria-hidden="true">密度相关概念的例子</figcaption>
+</figure>
+<h3 id="dbscan算法">DBSCAN算法</h3>
+<h4 id="核心参数">核心参数</h4>
+<ul>
+<li><strong><span
+class="math display"><em>ε</em></span>（eps）</strong>：定义点的“邻域”范围<br />
+</li>
+<li><strong>MinPts</strong>：最小邻居点数，决定一个点是否为“核心点”</li>
+</ul>
+<h4 id="算法流程-4">算法流程</h4>
+<ol type="1">
+<li><p><strong>初始化状态</strong><br />
+所有数据点标记为“未访问”。</p></li>
+<li><p><strong>从一个未访问点 <span
+class="math inline"><em>p</em></span> 开始：</strong></p>
+<ul>
+<li>计算 <span class="math inline"><em>p</em></span> 的 <span
+class="math inline"><em>ε</em></span>-邻域（记为 <span
+class="math inline"><em>N</em><sub><em>ε</em></sub>(<em>p</em>)</span>）；</li>
+<li>如果邻域内的点数 &lt; MinPts：将 <span
+class="math inline"><em>p</em></span> 标记为噪声，跳过；</li>
+<li>否则，将 <span class="math inline"><em>p</em></span>
+作为<strong>核心点</strong>，创建一个新簇，将 <span
+class="math inline"><em>N</em><sub><em>ε</em></sub>(<em>p</em>)</span>
+中的所有点加入该簇。</li>
+</ul></li>
+<li><p><strong>扩展当前簇：</strong><br />
+对刚加入簇的每个点 <span
+class="math inline"><em>q</em></span>（若未访问）执行：</p>
+<ul>
+<li>标记 <span class="math inline"><em>q</em></span> 为已访问；</li>
+<li>若 <span class="math inline"><em>q</em></span>
+是核心点（其邻域内点数 ≥ MinPts）：
+<ul>
+<li>将 <span
+class="math inline"><em>N</em><sub><em>ε</em></sub>(<em>q</em>)</span>
+中的所有点加入当前簇（即密度可达）；</li>
+</ul></li>
+<li>否则（<span class="math inline"><em>q</em></span>
+是边界点），保留在当前簇中，不继续扩展。</li>
+</ul></li>
+<li><p><strong>重复步骤 2~3</strong></p>
+<ul>
+<li>直到所有点都被访问。</li>
+</ul></li>
+</ol>
+<h4 id="dbscan-的输出">DBSCAN 的输出</h4>
+<ul>
+<li>若干个簇（每个由核心点及其密度可达的点组成）<br />
+</li>
+<li>一些噪声点（不属于任何簇）</li>
+</ul>
+<h4 id="优点">优点</h4>
+<ul>
+<li>不需要预先指定簇数<br />
+</li>
+<li>可发现任意形状的簇<br />
+</li>
+<li>可识别噪声点<br />
+</li>
+<li>对离群点不敏感</li>
+</ul>
+<h4 id="缺点">缺点</h4>
+<ul>
+<li>需要合适的 <span class="math display"><em>ε</em></span> 和
+MinPts<br />
+</li>
+<li>当数据密度差异较大时效果较差<br />
+</li>
+<li>高维数据中，距离不再可靠（维数灾难）</li>
+</ul>
+<h3 id="optics算法">OPTICS算法</h3>
+<p>OPTICS（Ordering Points To Identify the Clustering
+Structure）是一种基于密度的聚类算法，解决了 DBSCAN
+对参数敏感的问题。它不仅能发现不同密度的簇，还能输出数据的聚类结构排序，方便后续分析。</p>
+<h4 id="相关概念">相关概念</h4>
+<ul>
+<li><p><strong>核心距离（Core Distance）</strong><br />
+对点 <span class="math display"><em>p</em></span>，如果它的 <span
+class="math display"><em>ε</em></span>-邻域内至少有 MinPts
+个点，则核心距离是到第 MinPts 个最近邻的距离；否则未定义。</p></li>
+<li><p><strong>可达距离（Reachability Distance）</strong><br />
+对点 <span class="math display"><em>p</em></span> 和它的邻居 <span
+class="math display"><em>o</em></span>，可达距离定义为：</p>
+<p><span
+class="math display"><em>r</em><em>e</em><em>a</em><em>c</em><em>h</em><em>a</em><em>b</em><em>i</em><em>l</em><em>i</em><em>t</em><em>y</em>_<em>d</em><em>i</em><em>s</em><em>t</em>(<em>o</em>,<em>p</em>) = max (<em>c</em><em>o</em><em>r</em><em>e</em>_<em>d</em><em>i</em><em>s</em><em>t</em>(<em>p</em>),<em>d</em><em>i</em><em>s</em><em>t</em>(<em>p</em>,<em>o</em>))</span></p>
+<p>如果 <span class="math display"><em>p</em></span> 是核心点，且 <span
+class="math display"><em>o</em></span> 在 <span
+class="math display"><em>p</em></span> 的邻域内，否则未定义。</p></li>
+</ul>
+<h4 id="算法流程-5">算法流程</h4>
+<ol type="1">
+<li><strong>初始化</strong>
+<ul>
+<li>给数据集中每个点设置状态为“未访问”。<br />
+</li>
+<li>给每个点设置可达距离 <span
+class="math display"><em>r</em><em>e</em><em>a</em><em>c</em><em>h</em><em>a</em><em>b</em><em>i</em><em>l</em><em>i</em><em>t</em><em>y</em>_<em>d</em><em>i</em><em>s</em><em>t</em> = ∞</span>（表示未知）。<br />
+</li>
+<li>准备一个空的“输出顺序列表”（ordering），用于记录访问点的顺序。</li>
+</ul></li>
+<li><strong>遍历所有点</strong><br />
+对数据集中的每个点 <span class="math display"><em>p</em></span>：
+<ul>
+<li>如果 <span class="math display"><em>p</em></span>
+已经被访问过，跳过；<br />
+</li>
+<li>否则，开始处理 <span class="math display"><em>p</em></span>：</li>
+</ul></li>
+<li><strong>访问点 <span class="math display"><em>p</em></span></strong>
+<ul>
+<li>将 <span class="math display"><em>p</em></span>
+标记为“已访问”。<br />
+</li>
+<li>计算 <span class="math display"><em>p</em></span> 的核心距离 <span
+class="math display"><em>c</em><em>o</em><em>r</em><em>e</em>_<em>d</em><em>i</em><em>s</em><em>t</em>(<em>p</em>)</span>：
+<ul>
+<li>找出 <span class="math display"><em>p</em></span> 的 <span
+class="math display"><em>ε</em></span>-邻域中的所有点，排序后取第 MinPts
+个最近邻点的距离作为核心距离。<br />
+</li>
+<li>如果邻域内点数不足 MinPts，则 <span
+class="math display"><em>p</em></span>
+不是核心点，核心距离未定义。<br />
+</li>
+</ul></li>
+<li>把 <span class="math display"><em>p</em></span>
+加入输出顺序列表（ordering），此时 <span
+class="math display"><em>p</em></span>
+的可达距离保持为当前值（初始可能为无穷大）。</li>
+</ul></li>
+<li><strong>如果 <span class="math display"><em>p</em></span>
+是核心点</strong>
+<ul>
+<li>取 <span class="math display"><em>p</em></span> 的 <span
+class="math display"><em>ε</em></span>-邻域内所有<strong>未访问的点</strong>，放入一个优先队列（或类似结构），根据可达距离排序（距离越小优先）。<br />
+</li>
+<li>对这些邻居点 <span class="math display"><em>o</em></span>：
+<ul>
+<li>计算从 <span class="math display"><em>p</em></span> 到 <span
+class="math display"><em>o</em></span> 的可达距离：<br />
+<span
+class="math display"><em>r</em><em>e</em><em>a</em><em>c</em><em>h</em><em>a</em><em>b</em><em>i</em><em>l</em><em>i</em><em>t</em><em>y</em>_<em>d</em><em>i</em><em>s</em><em>t</em>(<em>o</em>) = max (<em>c</em><em>o</em><em>r</em><em>e</em>_<em>d</em><em>i</em><em>s</em><em>t</em>(<em>p</em>),<em>d</em><em>i</em><em>s</em><em>t</em>(<em>p</em>,<em>o</em>))</span><br />
+</li>
+<li>如果 <span class="math display"><em>o</em></span>
+当前的可达距离大于这个新值，则更新 <span
+class="math display"><em>o</em></span> 的可达距离为新值，并将 <span
+class="math display"><em>o</em></span> 加入优先队列。<br />
+</li>
+</ul></li>
+<li>依次从优先队列中取出可达距离最小的点 <span
+class="math display"><em>q</em></span>，重复步骤 3 和
+4，直到优先队列空。</li>
+</ul></li>
+<li><strong>继续处理剩余点</strong>
+<ul>
+<li>返回步骤 2，处理下一个未访问的点，直到所有点都被访问。</li>
+</ul></li>
+</ol>
+<h4 id="结果输出">结果输出</h4>
+<ul>
+<li>一条有序的点列表，反映数据的密度聚类结构。<br />
+</li>
+<li>通过绘制 <strong>可达距离图（Reachability
+Plot）</strong>，可以直观观察不同密度簇的分布和边界。</li>
+</ul>
+<figure>
+<img src="可达距离.jpg" srcset="/BLOG/img/loading.gif" lazyload alt="可达距离图示意" />
+<figcaption aria-hidden="true">可达距离图示意</figcaption>
+</figure>
+<h4 id="优点-1">优点</h4>
+<ul>
+<li>不需要像 DBSCAN 那样对 <span class="math display"><em>ε</em></span>
+选取非常敏感。<br />
+</li>
+<li>能发现不同密度的簇。<br />
+</li>
+<li>输出的可达距离序列方便后续聚类分析。</li>
+</ul>
+<h2 id="基于网格的聚类方法">基于网格的聚类方法</h2>
 <h2 id="基于模型的聚类方法">基于模型的聚类方法</h2>
 
                 
