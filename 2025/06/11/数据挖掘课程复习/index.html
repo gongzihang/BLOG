@@ -36,7 +36,7 @@
 <meta property="og:image" content="https://gongzihang.github.io/2025/06/11/%E6%95%B0%E6%8D%AE%E6%8C%96%E6%8E%98%E8%AF%BE%E7%A8%8B%E5%A4%8D%E4%B9%A0/可达距离.jpg">
 <meta property="og:image" content="https://gongzihang.github.io/2025/06/11/%E6%95%B0%E6%8D%AE%E6%8C%96%E6%8E%98%E8%AF%BE%E7%A8%8B%E5%A4%8D%E4%B9%A0/l2.png">
 <meta property="article:published_time" content="2025-06-10T16:24:29.000Z">
-<meta property="article:modified_time" content="2025-06-12T06:34:10.236Z">
+<meta property="article:modified_time" content="2025-06-12T09:05:48.472Z">
 <meta property="article:author" content="Zihang Gong">
 <meta property="article:tag" content="计算机">
 <meta property="article:tag" content="数据挖掘">
@@ -247,7 +247,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          13k 字
+          18k 字
         
       </span>
     
@@ -258,7 +258,7 @@
         
         
         
-          107 分钟
+          148 分钟
         
       </span>
     
@@ -2285,6 +2285,858 @@ class="math inline"><em>d</em><em>i</em><em>a</em><em>m</em>(<em>C</em><sub><em>
 </ul>
 <hr />
 <h1 id="离群点检测">离群点检测</h1>
+<h2 id="离群点的基本概念与分类">离群点的基本概念与分类</h2>
+<h3 id="离群点outlier的基本概念">离群点（Outlier）的基本概念</h3>
+<p>离群点是指数据集中明显偏离其他观测值的异常样本点。这些点通常表现为：</p>
+<ul>
+<li>与大多数数据点差异较大</li>
+<li>不符合数据的整体分布模式</li>
+<li>可能是测量错误、数据录入错误，也可能是真实的罕见事件</li>
+</ul>
+<p>离群点的识别对于数据清洗、异常检测和数据分析非常重要。</p>
+<hr />
+<h3 id="离群点的分类">离群点的分类</h3>
+<ol type="1">
+<li><p><strong>全局点异常（Point Outlier）</strong></p>
+<ul>
+<li>单个样本点偏离整体数据分布，显著异常。</li>
+<li>例如：一个人的身高为3米（明显偏离正常范围）。</li>
+</ul></li>
+<li><p><strong>上下文异常点（Contextual Outlier 或 Conditional
+Outlier）</strong></p>
+<ul>
+<li>数据点在某些上下文环境下表现异常，但在整体数据中未必异常。</li>
+<li>例如：气温30℃在夏天正常，但冬天异常。</li>
+</ul></li>
+<li><p><strong>集体异常点（Collective Outlier）</strong></p>
+<ul>
+<li>一组数据点整体偏离正常行为，即使单个点看起来不异常。</li>
+<li>例如：一段时间内网络异常流量的突然增长。</li>
+</ul></li>
+</ol>
+<h2 id="基于统计模型的概率测试-model-based">基于统计模型的概率测试
+(Model-based)</h2>
+<p><strong>基本思想</strong><br />
+统计检测（Statistical-based
+Methods）属于模型驱动（Model-based）方法。其核心在于：<br />
+<strong>构建某种已知的概率分布模型（如正态分布），将显著偏离该分布的点识别为离群点（Outliers）</strong>。</p>
+<hr />
+<h3 id="常见方法">常见方法</h3>
+<h4 id="单变量正态分布检测z-score">1. 单变量正态分布检测（Z-Score）</h4>
+<p><strong>原理</strong>：</p>
+<ul>
+<li><p>假设变量服从正态分布，计算每个点的 Z 分数：</p>
+<p><span class="math display">$$
+z = \frac{x - \mu}{\sigma}
+$$</span></p></li>
+<li><p>设定一个阈值（如 |z| &gt;
+3），超出该范围的点被认为是离群点。</p></li>
+</ul>
+<p><strong>适用场景</strong>：</p>
+<ul>
+<li>仅适用于<strong>一维数据</strong>。</li>
+<li>要求数据接近<strong>正态分布</strong>。</li>
+</ul>
+<hr />
+<h4 id="grubbs-检验grubbs-test">2. Grubbs 检验（Grubbs’ Test）</h4>
+<p><strong>原理</strong>：</p>
+<ul>
+<li><p>检测一个数据集中的<strong>最大偏差值是否显著异常</strong>。</p></li>
+<li><p>假设数据服从正态分布，计算最大/最小值与均值的偏差：</p>
+<p><span class="math display">$$
+G = \frac{ \max |x_i - \bar{x}| }{s}
+$$</span></p></li>
+<li><p>然后与临界值比较（由 t 分布决定）。</p></li>
+</ul>
+<p><strong>特点</strong>：</p>
+<ul>
+<li>适用于<strong>单个离群值检测</strong>。</li>
+<li>每次只能检测<strong>一个异常点</strong>，需反复执行。</li>
+</ul>
+<hr />
+<h4 id="马氏距离mahalanobis-distance">3. 马氏距离（Mahalanobis
+Distance）</h4>
+<p><strong>原理</strong>：</p>
+<ul>
+<li><p>多维数据的统计检测方法，考虑协方差之间的相关性。</p></li>
+<li><p>对于样本点 <span
+class="math display"><em>x</em></span>，其马氏距离定义为：</p>
+<p><span class="math display">$$
+D_M(x) = \sqrt{ (x - \mu)^T \Sigma^{-1} (x - \mu) }
+$$</span></p></li>
+<li><p>远离均值、考虑协方差结构的点即为异常点。</p></li>
+</ul>
+<p><strong>优点</strong>：</p>
+<ul>
+<li>考虑了变量间的<strong>相关性</strong>。</li>
+<li>适合<strong>多维正态分布</strong>数据。</li>
+</ul>
+<hr />
+<h4 id="参数混合模型parametric-mixture-models">4.
+参数混合模型（Parametric Mixture Models）</h4>
+<p><strong>原理</strong>：</p>
+<ul>
+<li><p>假设数据由多个分布混合而成（如双高斯分布：主群 +
+异常群）。</p></li>
+<li><p>使用 EM 算法估计每个点属于哪一类的概率：</p>
+<ul>
+<li>若一个点对“正常类”的后验概率非常低，则判为异常。</li>
+</ul></li>
+</ul>
+<p><strong>适用场景</strong>：</p>
+<ul>
+<li>异常点服从与主数据不同的分布。</li>
+</ul>
+<hr />
+<h4 id="非参数方法">5. 非参数方法</h4>
+<ul>
+<li><p><strong>直方图法</strong>：将数据分箱，箱中频率低的区间被视为异常区域。</p></li>
+<li><p><strong>核密度估计（KDE）</strong>：</p>
+<ul>
+<li>估计每个点的概率密度。</li>
+<li>若某点处的密度估计极低，则为离群点。</li>
+</ul></li>
+</ul>
+<p><strong>优点</strong>：</p>
+<ul>
+<li>无需分布假设。</li>
+<li>适合非正态、非结构化分布。</li>
+</ul>
+<hr />
+<h3 id="优缺点总结">优缺点总结</h3>
+<table>
+<thead>
+<tr class="header">
+<th>优点</th>
+<th>缺点</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>✅ 理论基础扎实</td>
+<td>❌ 对分布假设敏感（如必须服从正态分布）</td>
+</tr>
+<tr class="even">
+<td>✅ 可提供显著性水平（如p值）</td>
+<td>❌ 不适用于高维数据（维度灾难）</td>
+</tr>
+<tr class="odd">
+<td>✅ 易于解释</td>
+<td>❌ 不适合数据分布复杂或有多个模式的情况</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="总结">总结</h3>
+<blockquote>
+<p>统计检测方法适用于数据量不大、维度不高、且分布已知（或可合理假设为正态分布）的场景。如果数据维度高、分布未知或含有复杂结构，建议使用<strong>基于距离、密度或机器学习的方法</strong>进行异常检测。</p>
+</blockquote>
+<h2 id="基于深度的方法model-based">基于深度的方法(Model-based)</h2>
+<h3 id="基本思想-2">基本思想</h3>
+<p>基于深度的离群点检测方法属于 <strong>模型驱动（Model-based）</strong>
+方法，其核心思想是：</p>
+<blockquote>
+<p><strong>离群点通常远离“数据中心”，处在数据分布的边缘。</strong></p>
+</blockquote>
+<p>这些方法通过计算样本点的“<strong>深度</strong>”（depth）来判断其是否为离群点，深度越小，越靠近边界，越可能是离群点。</p>
+<hr />
+<h3 id="方法原理">方法原理</h3>
+<ol type="1">
+<li><p><strong>构建数据层次结构（如多层凸包 Convex Hull）</strong></p>
+<ul>
+<li>将数据包裹在一个凸壳中，移除最外层样本点。</li>
+<li>剩下的点构成“内层”。</li>
+<li>重复该过程，形成类似洋葱结构的多层数据分布。</li>
+</ul></li>
+<li><p><strong>计算数据深度（Data Depth）</strong></p>
+<ul>
+<li>每个点所在的“层数”即为其深度（Depth）。</li>
+<li>深度越小表示越外层，可能为异常点。</li>
+</ul></li>
+<li><p><strong>根据设定的深度阈值检测离群点</strong></p>
+<ul>
+<li>通常，设定一个最小深度阈值，如 <code>depth ≤ 1</code>。</li>
+</ul></li>
+</ol>
+<hr />
+<h3 id="典型方法">典型方法</h3>
+<ul>
+<li><p><strong>ISODEPTH（Isotonic Depth）</strong><br />
+基于等深线估计数据密度，深度等高线越远的样本越异常。</p></li>
+<li><p><strong>FDC（Fast Depth Contours）</strong><br />
+通过快速构造深度轮廓线（contours）以识别边界样本点。</p></li>
+</ul>
+<hr />
+<h3 id="优点与缺点">优点与缺点</h3>
+<table>
+<thead>
+<tr class="header">
+<th>优点</th>
+<th>缺点</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>✅ 无需对数据分布进行假设</td>
+<td>❌ 主要适用于 2D 或 3D 空间，扩展性差</td>
+</tr>
+<tr class="even">
+<td>✅ 对离群点定位自然直观</td>
+<td>❌ 计算复杂度高，特别是高维数据</td>
+</tr>
+<tr class="odd">
+<td>✅ 可以可视化解释（特别是低维）</td>
+<td>❌ 不适合大规模或高维数据场景</td>
+</tr>
+</tbody>
+</table>
+<h2 id="基于偏差的方法model-based">基于偏差的方法(Model-based)</h2>
+<h3 id="基本思想-3">基本思想</h3>
+<p>该方法属于 <strong>Model-based（模型驱动）</strong>
+异常检测方法，核心思想为：</p>
+<blockquote>
+<p><strong>寻找能最大程度降低整体数据集“偏差”或“方差”的子集，认为这些样本是异常点。</strong></p>
+</blockquote>
+<ul>
+<li>正常数据应具有某种“紧凑”结构（如低方差）</li>
+<li>异常点会“拉大”整体分布</li>
+<li>删除某些点后，如果整体变得更“紧凑”，那么这些被删除的点很可能是离群点</li>
+</ul>
+<hr />
+<h3 id="典型方法sfi-模型arning-等">典型方法：SF(I) 模型（Arning
+等）</h3>
+<ul>
+<li><p><strong>提出者</strong>：Arning, Agrawal 和 Raghavan
+(1996)</p></li>
+<li><p><strong>SF(I) 指标定义</strong>：</p>
+<p>设数据集为 <span
+class="math display"><em>D</em></span>，我们希望找出一个子集 <span
+class="math display"><em>I</em> ⊆ <em>D</em></span>，其移除后会带来<strong>最大的信息压缩或方差降低</strong>。</p>
+<ul>
+<li><p>定义一个<strong>目标函数</strong>：</p>
+<p><span
+class="math display"><em>S</em><em>F</em>(<em>I</em>) = Var(<em>D</em>) − Var(<em>D</em>−<em>I</em>)</span></p></li>
+<li><p>其中 Var(·) 表示数据集的方差或某种误差度量</p></li>
+<li><p><span
+class="math display"><em>S</em><em>F</em>(<em>I</em>)</span> 越大，说明
+<span class="math display"><em>I</em></span>
+中的点是影响整体结构的“异常值”可能性越高</p></li>
+</ul></li>
+</ul>
+<hr />
+<h3 id="优点-4">优点</h3>
+<ul>
+<li>✅
+<strong>概念直观</strong>：只需比较方差的变化即可判断是否为离群点</li>
+<li>✅
+<strong>适用于任意类型数据</strong>（数值型、类别型、混合型）</li>
+</ul>
+<hr />
+<h3 id="缺点-3">缺点</h3>
+<ul>
+<li>❌ <strong>计算复杂度极高</strong>：
+<ul>
+<li>在最坏情况下，需要检查所有可能的子集 <span
+class="math display"><em>I</em></span>，即时间复杂度为 <span
+class="math display"><em>O</em>(2<sup><em>n</em></sup>)</span></li>
+<li>因此，需要借助<strong>启发式算法</strong>进行优化（如贪心、剪枝、局部搜索等）</li>
+</ul></li>
+</ul>
+<h2
+id="基于距离的方法proximity-based">基于距离的方法（Proximity-based）</h2>
+<h3 id="基本思想-4">基本思想</h3>
+<p>基于距离的异常检测方法属于
+<strong>Proximity-based（基于邻近度）</strong> 方法，核心观点是：</p>
+<ul>
+<li>异常点距离其邻居较远，邻域较为空旷<br />
+</li>
+<li>正常点的邻域内样本密集，距离较近</li>
+</ul>
+<p>通过计算每个点与其周围点的距离，判断是否离群。</p>
+<hr />
+<h3 id="核心模型与指标">核心模型与指标</h3>
+<ul>
+<li><p><strong>DB(ε, π)模型</strong><br />
+设定一个半径阈值 <span class="math display"><em>ε</em></span>
+和邻居比例阈值 <span class="math display"><em>π</em></span>。<br />
+如果一个点在半径 <span class="math display"><em>ε</em></span>
+内的邻居数量小于 <span
+class="math display"><em>π</em></span>，则该点被判定为异常。</p></li>
+<li><p><strong>kNN距离评分</strong><br />
+计算点 <span class="math display"><em>p</em></span> 到其第 <span
+class="math display"><em>k</em></span> 近邻的距离 <span
+class="math display"><em>d</em><sub><em>k</em></sub>(<em>p</em>)</span>。<br />
+距离越大，说明该点越孤立，异常可能性越大。</p></li>
+<li><p><strong>k-近邻图（kNN Graph）入度判断</strong><br />
+构建一个图，点之间连接到最近的 <span
+class="math display"><em>k</em></span> 个邻居。<br />
+统计某点被多少其他点作为邻居（入度）。入度低的点通常是离群点。</p></li>
+<li><p><strong>分辨率因子（ROF）</strong></p>
+<ol type="1">
+<li><p><strong>定义分辨率层次</strong><br />
+设定一组分辨率阈值（如 <span
+class="math display"><em>ε</em><sub>1</sub> &lt; <em>ε</em><sub>2</sub> &lt; ⋯ &lt; <em>ε</em><sub><em>m</em></sub></span>），用于逐层分析数据结构。</p></li>
+<li><p><strong>分辨率下邻域聚类</strong><br />
+对于每个分辨率阈值 <span
+class="math display"><em>ε</em><sub><em>i</em></sub></span>：</p>
+<ul>
+<li>根据距离和阈值 <span
+class="math display"><em>ε</em><sub><em>i</em></sub></span>
+将数据点聚类。<br />
+</li>
+<li>若两个点距离不超过 <span
+class="math display"><em>ε</em><sub><em>i</em></sub></span>，则它们属于同一簇的邻居。</li>
+</ul></li>
+<li><p><strong>计算聚类大小变化</strong></p>
+<ul>
+<li>在不同分辨率 <span
+class="math display"><em>ε</em><sub><em>i</em></sub></span>
+下，记录每个数据点所在聚类的大小（即簇中点的数量）。<br />
+</li>
+<li>观察聚类大小随分辨率变化的趋势。</li>
+</ul></li>
+<li><p><strong>计算累积异常值因子（ROF）</strong></p>
+<ul>
+<li>根据数据点在各分辨率层次聚类大小的变化，计算ROF值。<br />
+</li>
+<li>ROF值反映数据点在多层分辨率结构中“聚类稳定性”的变化情况。<br />
+</li>
+<li>变化较大的点（ROF值较低）通常是异常点。</li>
+</ul></li>
+<li><p><strong>异常点排序与选择</strong></p>
+<ul>
+<li>根据ROF值对所有数据点排序。<br />
+</li>
+<li>选择ROF值最低的前 <span class="math display"><em>k</em></span>
+个点作为异常值。</li>
+</ul></li>
+</ol></li>
+</ul>
+<hr />
+<h3 id="代表算法">代表算法</h3>
+<ul>
+<li><p><strong>ORCA</strong><br />
+通过利用距离剪枝技术快速计算kNN距离，实现高效的异常检测。</p>
+<ul>
+<li><p><strong>特点</strong><br />
+利用三角不等式和剪枝技术，减少不必要的距离计算。</p></li>
+<li><p><strong>流程</strong></p>
+<ol type="1">
+<li>计算数据集中点的kNN距离。<br />
+</li>
+<li>对于每个点，若kNN距离大于阈值，则标记为异常。</li>
+</ol></li>
+<li><p><strong>优势</strong><br />
+相比暴力计算，效率提升显著，适合大数据。</p></li>
+</ul></li>
+<li><p><strong>RBRP</strong><br />
+基于空间分区的方法，先划分数据空间，再局部检测异常，降低计算复杂度。</p>
+<ul>
+<li><p><strong>思路</strong><br />
+先将数据空间划分成若干区域（分区），减少邻居搜索范围。</p></li>
+<li><p><strong>流程</strong></p>
+<ol type="1">
+<li>对数据做空间划分。<br />
+</li>
+<li>在每个分区内局部计算kNN距离。<br />
+</li>
+<li>综合各分区结果，标记异常。</li>
+</ol></li>
+<li><p><strong>优势</strong><br />
+降低全局搜索复杂度，提升速度。</p></li>
+</ul></li>
+<li><p><strong>基于分区的算法</strong><br />
+利用数据划分，将复杂问题分解，便于局部检测异常，适合大规模数据。</p>
+<ul>
+<li>将数据空间划分成多个小块，分别检测异常。<br />
+</li>
+<li>适合高维数据或大规模数据集。<br />
+</li>
+<li>结合局部异常检测，能发现局部稀疏区域的异常。</li>
+</ul></li>
+</ul>
+<h3 id="优缺点">优缺点</h3>
+<table>
+
+<thead>
+<tr class="header">
+<th>优点</th>
+<th>缺点</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>灵活，能检测局部和全局异常点</td>
+<td>受“维度灾难”影响，高维数据效果差</td>
+</tr>
+<tr class="even">
+<td>直观，易理解，适合多种数据类型</td>
+<td>计算复杂度高，距离计算耗时较多</td>
+</tr>
+<tr class="odd">
+<td>适用于多种数据分布，无需分布假设</td>
+<td>需要合理选择参数，如 <span class="math display"><em>ε</em></span> 和
+<span class="math display"><em>k</em></span></td>
+</tr>
+</tbody>
+</table>
+<h2
+id="基于密度的方法proximity-based">基于密度的方法（Proximity-based）</h2>
+<h3 id="基本思想-5">基本思想</h3>
+<p>基于密度的方法通过比较一个点与其邻域的密度来判断是否异常：<br />
+- 如果某点的密度远低于周围点的密度，则可能是离群点。<br />
+- 通常基于 <strong>相对密度</strong>，更适用于具有不同密度的区域。</p>
+<hr />
+<h3 id="代表方法与简要流程">代表方法与简要流程</h3>
+<h4 id="loflocal-outlier-factor">1. LOF（Local Outlier Factor）</h4>
+<p><strong>思想</strong>：与邻居的局部密度相比，若某点显著稀疏则为离群点。</p>
+<p><strong>流程</strong>：</p>
+<ol type="1">
+<li>设定邻居数 <span
+class="math display"><em>k</em></span>，计算每个点的 <span
+class="math display"><em>k</em></span>-距离邻域。</li>
+<li>计算每个点的 <strong>可达距离（Reachability Distance）</strong>：
+<span
+class="math display">reach-dist<sub><em>k</em></sub>(<em>p</em>,<em>o</em>) = max {<em>k</em>-dist(<em>o</em>), <em>d</em>(<em>p</em>,<em>o</em>)}</span></li>
+<li>计算 <strong>局部可达密度（LRD）</strong>： <span
+class="math display">$$
+\text{LRD}_k(p) = \left( \frac{1}{|N_k(p)|} \sum_{o \in N_k(p)}
+\text{reach-dist}_k(p, o) \right)^{-1}
+$$</span></li>
+<li>计算 <strong>LOF值</strong>： <span class="math display">$$
+\text{LOF}_k(p) = \frac{1}{|N_k(p)|} \sum_{o \in N_k(p)}
+\frac{\text{LRD}_k(o)}{\text{LRD}_k(p)}
+$$</span></li>
+<li>LOF值越大，越可能是离群点。</li>
+</ol>
+<hr />
+<h4 id="cofconnectivity-based-outlier-factor">2. COF（Connectivity-based
+Outlier Factor）</h4>
+<p><strong>核心思想：</strong></p>
+<p>COF（连通性异常因子）是一种用于离群点检测的密度方法，旨在通过衡量数据点与其邻域之间的“连通性”强弱来判断是否为异常点。</p>
+<ul>
+<li>正常点在局部区域连通性强；</li>
+<li>异常点的连通性较弱，其与邻居之间的路径通常更长；</li>
+<li>COF值越大，表示该点越可能是异常值。</li>
+</ul>
+<hr />
+<p><strong>基本定义：</strong></p>
+<ul>
+<li><strong>k-最近邻（kNN）</strong>：点 <span
+class="math display"><em>p</em></span> 的最近 <span
+class="math display"><em>k</em></span> 个邻居集合，记作 <span
+class="math display"><em>N</em><sub><em>k</em></sub>(<em>p</em>)</span>。</li>
+<li><strong>SBN-Path（Set-based Nearest Path）</strong>：从点 <span
+class="math display"><em>p</em></span> 到 <span
+class="math display"><em>N</em><sub><em>k</em></sub>(<em>p</em>)</span>
+中所有点的“连通路径”。</li>
+<li><strong>链式距离（Chaining Distance）</strong>：从点 <span
+class="math display"><em>p</em></span>
+到每个邻居的连接路径的总距离。</li>
+<li><strong>平均链式距离（ac-dist）</strong>：点 <span
+class="math display"><em>p</em></span> 的 SBN-Path
+中所有路径长度的平均值。</li>
+</ul>
+<hr />
+<p><strong>算法流程：</strong></p>
+<ol type="1">
+<li><p><strong>寻找 k 个最近邻</strong><br />
+对于数据集中的每个点 <span
+class="math display"><em>p</em></span>，找到其 <span
+class="math display"><em>k</em></span> 个最近邻组成集合 <span
+class="math display"><em>N</em><sub><em>k</em></sub>(<em>p</em>)</span>。</p></li>
+<li><p><strong>构建 SBN-Path 并计算链式距离</strong><br />
+使用贪心策略，逐步从 <span class="math display"><em>p</em></span>
+开始连接未访问的邻居，形成一条连通路径，计算该路径的总长度。</p></li>
+<li><p><strong>计算平均链式距离</strong><br />
+对于每个点 <span
+class="math display"><em>p</em></span>，计算其平均链式距离（ac-dist）：
+<span class="math display">$$
+\text{ac-dist}(p) = \frac{1}{|N_k(p)|} \sum_{\text{链上每一步}} d(x_i,
+x_{i+1})
+$$</span></p></li>
+<li><p><strong>计算 COF 值</strong><br />
+计算点 <span class="math display"><em>p</em></span> 的 COF 值： <span
+class="math display">$$
+\text{COF}(p) = \frac{\text{ac-dist}(p)}{\frac{1}{|N_k(p)|} \sum_{q \in
+N_k(p)} \text{ac-dist}(q)}
+$$</span> 如果 <span
+class="math display">COF(<em>p</em>) ≫ 1</span>，说明 <span
+class="math display"><em>p</em></span>
+的连通性显著弱于邻域点，是潜在异常值。</p></li>
+<li><p><strong>异常值排序与检测</strong><br />
+将所有点按 COF 值降序排序，取前 <span
+class="math display"><em>n</em></span> 个作为异常点。</p></li>
+</ol>
+<hr />
+<h4 id="infloinfluenced-outlierness">3. INFLO（Influenced
+Outlierness）</h4>
+<p><strong>算法动机：</strong></p>
+<ul>
+<li><strong>LOF 的问题</strong>：在不同密度的簇之间没有明显边界时，LOF
+可能将“稀疏簇内的正常点”错误地判为离群点。</li>
+<li><strong>INFLO
+的改进思路</strong>：考虑对称的邻域关系，将“反向邻居”也纳入密度计算，更合理地估计点的局部密度。</li>
+</ul>
+<hr />
+<p><strong>核心概念：</strong></p>
+<ol type="1">
+<li>k-近邻 (kNN)
+<ul>
+<li><span
+class="math display"><em>k</em><em>N</em><em>N</em>(<em>p</em>)</span>：点
+<span class="math display"><em>p</em></span> 的 <span
+class="math display"><em>k</em></span> 个最近邻集合。</li>
+</ul></li>
+<li>反向 k-近邻 (Reverse kNN)
+<ul>
+<li><span
+class="math display"><em>R</em><em>k</em><em>N</em><em>N</em>(<em>p</em>)</span>：将
+<span class="math display"><em>p</em></span>
+看作最近邻的所有其他点的集合，即 <span
+class="math display"><em>p</em></span> 是这些点的 kNN 成员。</li>
+</ul></li>
+<li>影响空间 (Influence Space)
+<ul>
+<li><span
+class="math display"><em>k</em><em>I</em><em>S</em>(<em>p</em>) = <em>k</em><em>N</em><em>N</em>(<em>p</em>) ∪ <em>R</em><em>k</em><em>N</em><em>N</em>(<em>p</em>)</span></li>
+<li>表示“与点 <span class="math display"><em>p</em></span>
+存在双向邻近关系”的点集合。</li>
+</ul></li>
+</ol>
+<hr />
+<p><strong>密度定义：</strong></p>
+<ul>
+<li><strong>点 <span class="math display"><em>p</em></span>
+的密度定义</strong>： <span class="math display">$$
+den(p) = \frac{1}{k\text{-distance}(p)}
+$$</span>
+<ul>
+<li>即 <span class="math display"><em>p</em></span> 到第 <span
+class="math display"><em>k</em></span> 个最近邻的距离的倒数。</li>
+</ul></li>
+</ul>
+<hr />
+<p><strong>INFLO 值计算：</strong></p>
+<ol type="1">
+<li><p>计算影响空间中每个点的密度：<br />
+对每个 <span
+class="math display"><em>o</em> ∈ <em>k</em><em>I</em><em>S</em>(<em>p</em>)</span>，计算：<br />
+<span class="math display">$$
+den(o) = \frac{1}{k\text{-distance}(o)}
+$$</span></p></li>
+<li><p>计算 INFLO：<br />
+<span class="math display">$$
+  INFLO(p) = \frac{1}{|kIS(p)|} \sum_{o \in kIS(p)}
+\frac{den(o)}{den(p)}
+  $$</span></p></li>
+</ol>
+<hr />
+<p><strong>算法流程：</strong></p>
+<ol type="1">
+<li><strong>计算每个点的 kNN 和 RkNN</strong>，合并得到影响空间 <span
+class="math display"><em>k</em><em>I</em><em>S</em>(<em>p</em>)</span>；</li>
+<li><strong>根据 k-distance 计算每个点的密度 den(p)</strong>；</li>
+<li><strong>对每个点 <span class="math display"><em>p</em></span>
+计算其影响空间中点的平均密度，并与自身密度做比值</strong>，即计算 INFLO
+值；</li>
+<li><strong>对所有点根据 INFLO 值排序</strong>，INFLO
+值越大，离群可能性越高。</li>
+</ol>
+<p><strong>性质与解释：</strong></p>
+<ul>
+<li>若 <span
+class="math display"><em>I</em><em>N</em><em>F</em><em>L</em><em>O</em>(<em>p</em>) ≈ 1</span>：<span
+class="math display"><em>p</em></span> 处于某个密度一致的簇中；</li>
+<li>若 <span
+class="math display"><em>I</em><em>N</em><em>F</em><em>L</em><em>O</em>(<em>p</em>) ≫ 1</span>：<span
+class="math display"><em>p</em></span>
+密度显著低于影响空间中的其他点，可能是离群点。</li>
+</ul>
+<p><strong>优势</strong>：</p>
+<ul>
+<li>可处理非均匀密度分布的数据</li>
+<li>使密度评估更加对称、全面</li>
+</ul>
+<hr />
+<h4 id="locilocal-correlation-integral">4. LOCI（Local Correlation
+Integral）</h4>
+<p><strong>基本思想：</strong></p>
+<ul>
+<li>与 LOF 类似，LOCI
+判断一个点是否为异常值，依据是：该点的局部密度是否显著低于其邻域的平均密度。</li>
+<li><strong>区别在于：</strong>
+<ul>
+<li>LOF 使用 kNN，LOCI 使用 <strong>ε-邻域</strong></li>
+<li>LOF 固定尺度，LOCI 在 <strong>多个分辨率（granularities）</strong>
+下做检测</li>
+</ul></li>
+<li>目的是提高算法稳定性，并避免手动设定参数 k 或 ε。</li>
+</ul>
+<hr />
+<p><strong>核心定义：</strong></p>
+<ol type="1">
+<li>ε-邻域
+<ul>
+<li><span
+class="math display"><em>N</em>(<em>p</em>,<em>ε</em>) = {<em>q</em> ∣ dist(<em>p</em>,<em>q</em>) ≤ <em>ε</em>}</span></li>
+<li>点 <span class="math display"><em>p</em></span> 的
+ε-邻域中包含所有与 <span class="math display"><em>p</em></span>
+距离不超过 <span class="math display"><em>ε</em></span> 的点。</li>
+</ul></li>
+<li>α·ε-邻域
+<ul>
+<li><span
+class="math display"><em>N</em>(<em>q</em>,<em>α</em>⋅<em>ε</em>)</span>：点
+<span class="math display"><em>q</em></span> 的缩放邻域，<span
+class="math display">0 &lt; <em>α</em> ≤ 1</span>，常取 <span
+class="math display"><em>α</em> = 0.5</span></li>
+</ul></li>
+</ol>
+<hr />
+<p><strong>局部密度计算：</strong></p>
+<ol type="1">
+<li><p>点 p 的局部密度： <span class="math display">$$
+  \text{den}(p, \varepsilon, \alpha) = \frac{1}{|N(p, \varepsilon)|}
+\sum_{q \in N(p, \varepsilon)} |N(q, \alpha \cdot \varepsilon)|
+  $$</span></p>
+<ul>
+<li>含义：点 <span class="math display"><em>p</em></span>
+的密度由其邻域中各点自身局部邻域大小的平均值决定。</li>
+</ul></li>
+</ol>
+<hr />
+<p><strong>异常度量：MDEF（Multi-granularity Deviation
+Factor）</strong></p>
+<ul>
+<li><p>定义： <span class="math display">$$
+\text{MDEF}(p, \varepsilon, \alpha) = 1 - \frac{|N(p, \alpha \cdot
+\varepsilon)|}{\text{den}(p, \varepsilon, \alpha)}
+$$</span></p></li>
+<li><p>直观理解：</p>
+<ul>
+<li>如果 <span class="math display"><em>p</em></span>
+的邻域密度远低于其邻域平均密度，MDEF 值较大 ⇒ 更可能是异常点。</li>
+<li>如果 <span class="math display"><em>p</em></span> 密度与邻域一致，则
+<span class="math display">MDEF ≈ 0</span> ⇒ 正常点。</li>
+</ul></li>
+</ul>
+<hr />
+<p><strong>标准差：σ_MDEF</strong></p>
+<ul>
+<li><p><span
+class="math display"><em>σ</em><sub>MDEF</sub>(<em>p</em>,<em>ε</em>,<em>α</em>)</span>
+表示局部密度的标准差，用于评估 MDEF 的显著性。</p></li>
+<li><p>异常点判定规则：</p>
+<ul>
+<li>若 <span
+class="math display">MDEF(<em>p</em>,<em>ε</em>,<em>α</em>) &gt; 3 ⋅ <em>σ</em><sub>MDEF</sub></span>，则判为异常点（基于
+3σ 原则）。</li>
+</ul></li>
+</ul>
+<hr />
+<p><strong>算法流程：</strong></p>
+<ol type="1">
+<li>遍历所有点
+<ul>
+<li>对数据集中每个点 <span class="math display"><em>p</em></span>：</li>
+</ul></li>
+<li>遍历多尺度（多个 ε 值）
+<ul>
+<li>设定多个 <span class="math display"><em>ε</em></span>
+分辨率（从小到大），逐个测试：</li>
+</ul></li>
+<li>计算 ε-邻域和 α·ε-邻域大小
+<ul>
+<li><span class="math display"><em>N</em>(<em>p</em>,<em>ε</em>)</span>
+和 <span
+class="math display"><em>N</em>(<em>q</em>,<em>α</em>⋅<em>ε</em>)</span></li>
+</ul></li>
+<li>计算密度、MDEF、σ_MDEF
+<ul>
+<li>得到 <span
+class="math display">den(<em>p</em>,<em>ε</em>,<em>α</em>)</span></li>
+<li>得到 <span
+class="math display">MDEF(<em>p</em>,<em>ε</em>,<em>α</em>)</span></li>
+<li>得到 <span
+class="math display"><em>σ</em><sub>MDEF</sub>(<em>p</em>,<em>ε</em>,<em>α</em>)</span></li>
+</ul></li>
+<li>判断异常点
+<ul>
+<li>若 <span
+class="math display">MDEF(<em>p</em>,<em>ε</em>,<em>α</em>) &gt; 3 ⋅ <em>σ</em><sub>MDEF</sub></span>，则在该分辨率下，<span
+class="math display"><em>p</em></span> 是异常点。</li>
+</ul></li>
+</ol>
+<hr />
+<p><strong>LOCI Plot 可视化:</strong></p>
+<ul>
+<li>对某个点 <span
+class="math display"><em>p</em></span>，可画出多尺度下的 LOCI
+曲线，显示：
+<ul>
+<li><span
+class="math display">|<em>N</em>(<em>p</em>,<em>α</em>⋅<em>ε</em>)|</span></li>
+<li><span
+class="math display">den(<em>p</em>,<em>ε</em>,<em>α</em>) ± 3<em>σ</em></span>
+上下界</li>
+</ul></li>
+<li>可用图表找出在哪些尺度下 <span
+class="math display"><em>p</em></span> 被判定为异常点。</li>
+</ul>
+<hr />
+<p><strong>输出结果:</strong></p>
+<ul>
+<li><strong>异常评分</strong>：MDEF 值，可排序。</li>
+<li><strong>异常标签</strong>：是否满足 <span
+class="math display">MDEF &gt; 3<em>σ</em></span> 的条件。</li>
+<li><strong>可解释图表</strong>：LOCI Plot 可展示异常发生的尺度</li>
+</ul>
+<p><strong>特点</strong>：</p>
+<ul>
+<li>不依赖具体参数（如 <span
+class="math display"><em>k</em></span>）</li>
+<li>提供异常的置信度范围（MDEF）</li>
+</ul>
+<h3 id="特点总结-1">特点总结</h3>
+<ul>
+<li>✅ 更适合处理不同密度区域<br />
+</li>
+<li>✅ 输出连续的异常评分，可排序选择异常点<br />
+</li>
+<li>❗ 参数敏感，如 <span class="math display"><em>k</em></span> 或
+<span class="math display"><em>ε</em></span> 需合理设置<br />
+</li>
+<li>❗ 计算复杂度通常较高（如 <span
+class="math display"><em>O</em>(<em>n</em><sup>2</sup>)</span>）</li>
+</ul>
+<hr />
+<h2 id="基于重构的方法其他类型">基于重构的方法(其他类型)</h2>
+<h3 id="基本思想-6">基本思想</h3>
+<p>假设数据可由一个简洁的模型有效表示或重构。<br />
+若某个数据点无法被模型很好重构（即重构误差高），则可能是异常点。</p>
+<hr />
+<h3 id="常见技术">常见技术</h3>
+<h4 id="矩阵分解matrix-factorization">1. 矩阵分解（Matrix
+Factorization）</h4>
+<ul>
+<li><strong>代表方法：</strong>
+奇异值分解（SVD）或主成分分析（PCA）<br />
+</li>
+<li><strong>原理：</strong>
+将原始高维数据映射到一个低维空间并重构，如果某个样本的重构误差较大，则可能是异常。</li>
+<li><strong>异常度计算：</strong> <span
+class="math display">error(<em>x</em>) = ∥<em>x</em> − <em>x̂</em>∥<sub>2</sub></span>
+其中 <span class="math display"><em>x̂</em></span>
+是降维后的重构结果。</li>
+</ul>
+<h4 id="码表压缩法codebookcompression-based">2.
+码表压缩法（Codebook/Compression-based）</h4>
+<ul>
+<li><strong>代表思想：</strong>
+通过对数据压缩（如MDL理论），来衡量异常性。</li>
+<li><strong>核心假设：</strong>
+正常数据可以被压缩得很好，而异常点不容易压缩，需要更长的编码长度。</li>
+<li><strong>典型方法：</strong>
+<ul>
+<li>Lempel-Ziv 编码长度分析<br />
+</li>
+<li>BZIP2/GZIP等压缩算法结合</li>
+</ul></li>
+<li><strong>异常度：</strong> 用编码长度 <span
+class="math display"><em>L</em>(<em>x</em>)</span>
+表示，编码长度越长越异常。</li>
+</ul>
+<h4 id="自编码器autoencoder">3. 自编码器（Autoencoder）</h4>
+<ul>
+<li><strong>结构：</strong>
+包括编码器（Encoder）和解码器（Decoder），构建一个神经网络模型学习 <span
+class="math display"><em>x</em> → <em>x̂</em></span>。</li>
+<li><strong>核心思想：</strong>
+正常样本的重构误差较低，异常样本无法通过训练好的网络精确还原。</li>
+<li><strong>重构误差：</strong> <span
+class="math display">Loss(<em>x</em>) = ∥<em>x</em> − <em>x̂</em>∥<sup>2</sup>  或  BCE(<em>x</em>,<em>x̂</em>)</span></li>
+<li><strong>改进变种：</strong>
+<ul>
+<li>稀疏自编码器（Sparse AE）<br />
+</li>
+<li>卷积自编码器（CAE）<br />
+</li>
+<li>变分自编码器（VAE）</li>
+</ul></li>
+</ul>
+<hr />
+<h3 id="优点-5">优点</h3>
+<ul>
+<li>可捕捉数据的复杂非线性结构（特别是深度学习方法）</li>
+<li>适合连续属性和高维数据场景</li>
+</ul>
+<h3 id="缺点-4">缺点</h3>
+<ul>
+<li>训练成本较高（尤其是深度网络）</li>
+<li>类别型数据支持较差</li>
+<li>可能需要较多超参数调整</li>
+</ul>
+<hr />
+<h2 id="高维方法high-dimensional-approaches">高维方法（High-dimensional
+Approaches）</h2>
+<h3 id="问题背景">问题背景</h3>
+<p>在高维空间中，传统的距离或密度度量变得不可靠，容易出现“维数灾难”问题：</p>
+<ul>
+<li>距离集中效应（所有点间距离趋于相同）</li>
+<li>密度稀疏，难以定义邻域或聚类结构</li>
+</ul>
+<hr />
+<h3 id="常见解决方法">常见解决方法</h3>
+<h4 id="降维-异常检测">1. 降维 + 异常检测</h4>
+<ul>
+<li><strong>核心思路：</strong>
+先将高维数据压缩到低维，再在低维空间中进行异常检测。</li>
+<li><strong>常用模型：</strong>
+<ul>
+<li>自编码器（Autoencoder）</li>
+<li>OC-NN（One-Class Neural Network）</li>
+<li>DevNet（Deep Semi-Supervised Anomaly Detection）</li>
+</ul></li>
+<li><strong>流程：</strong>
+<ol type="1">
+<li>用神经网络学习高维数据的低维嵌入表示。</li>
+<li>在嵌入空间中使用距离、密度或边界方法识别异常点。</li>
+</ol></li>
+</ul>
+<h4 id="abodangle-based-outlier-detection">2. ABOD（Angle-Based Outlier
+Detection）</h4>
+<ul>
+<li><strong>核心思想：</strong>
+异常点与其它点形成的角度分布差异大。</li>
+<li><strong>解释：</strong>
+<ul>
+<li>正常点通常被“包围”，与其它点的角度变化小。</li>
+<li>异常点在边缘，与其它点形成的向量夹角分布变化大。</li>
+</ul></li>
+<li><strong>计算方法：</strong> 对每个点 <span
+class="math display"><em>p</em></span>，计算其与其它点对 <span
+class="math display">(<em>o</em><sub><em>i</em></sub>,<em>o</em><sub><em>j</em></sub>)</span>
+构成的角度的方差： <span
+class="math display"><em>A</em><em>B</em><em>O</em><em>D</em>(<em>p</em>) = Variance(cos∠(<em>p</em>,<em>o</em><sub><em>i</em></sub>,<em>o</em><sub><em>j</em></sub>))</span>
+<ul>
+<li>方差越小 → 越像正常点<br />
+</li>
+<li>方差越大 → 越可能是离群点</li>
+</ul></li>
+</ul>
+<hr />
+<h3 id="优点-6">优点</h3>
+<ul>
+<li>适合高维数据（尤其是深度学习方法）</li>
+<li>能挖掘复杂的非线性结构</li>
+</ul>
+<h3 id="缺点-5">缺点</h3>
+<ul>
+<li>算法复杂度高，训练和推理时间较长</li>
+<li>可解释性较差（尤其是深度模型）</li>
+</ul>
+<h1 id="不会的都不考">不会的都不考！</h1>
 
                 
               </div>
