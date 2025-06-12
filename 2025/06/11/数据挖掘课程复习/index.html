@@ -36,7 +36,7 @@
 <meta property="og:image" content="https://gongzihang.github.io/2025/06/11/%E6%95%B0%E6%8D%AE%E6%8C%96%E6%8E%98%E8%AF%BE%E7%A8%8B%E5%A4%8D%E4%B9%A0/可达距离.jpg">
 <meta property="og:image" content="https://gongzihang.github.io/2025/06/11/%E6%95%B0%E6%8D%AE%E6%8C%96%E6%8E%98%E8%AF%BE%E7%A8%8B%E5%A4%8D%E4%B9%A0/l2.png">
 <meta property="article:published_time" content="2025-06-10T16:24:29.000Z">
-<meta property="article:modified_time" content="2025-06-12T12:56:39.661Z">
+<meta property="article:modified_time" content="2025-06-12T13:53:57.750Z">
 <meta property="article:author" content="Zihang Gong">
 <meta property="article:tag" content="计算机">
 <meta property="article:tag" content="数据挖掘">
@@ -3128,7 +3128,7 @@ Approaches）</h2>
 Detection）</h4>
 <ul>
 <li><strong>核心思想：</strong>
-异常点与其它点形成的角度分布差异大。</li>
+异常点与其它点形成的角度分布差异小。</li>
 <li><strong>解释：</strong>
 <ul>
 <li>正常点通常被“包围”，与其它点的角度变化小。</li>
@@ -3140,9 +3140,9 @@ class="math display">(<em>o</em><sub><em>i</em></sub>,<em>o</em><sub><em>j</em><
 构成的角度的方差： <span
 class="math display"><em>A</em><em>B</em><em>O</em><em>D</em>(<em>p</em>) = Variance(cos∠(<em>p</em>,<em>o</em><sub><em>i</em></sub>,<em>o</em><sub><em>j</em></sub>))</span>
 <ul>
-<li>方差越小 → 越像正常点<br />
+<li>方差越大 → 越像正常点<br />
 </li>
-<li>方差越大 → 越可能是离群点</li>
+<li>方差越小 → 越可能是离群点</li>
 </ul></li>
 </ul>
 <hr />
