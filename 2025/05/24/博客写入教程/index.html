@@ -24,7 +24,7 @@
     <meta name="description" content="📘 Markdown 写作模板（含 Front Matter 与语法指南）  第一部分：📄 Front Matter 配置说明  Front Matter 是 Markdown 文件顶部的元信息，用于配置文章标题、标签、分类、日期等内容。通常写在 --- 包裹的 YAML 格式中。  🧾 示例模板 1234567891011121314---layout: postti">
 <meta property="og:type" content="article">
 <meta property="og:title" content="博客写入教程">
-<meta property="og:url" content="https://gongzihang.github.io/2025/05/24/%E5%8D%9A%E5%AE%A2%E5%86%99%E5%85%A5%E6%95%99%E7%A8%8B/index.html">
+<meta property="og:url" content="https://gongzihang.github.io/BLOG/2025/05/24/%E5%8D%9A%E5%AE%A2%E5%86%99%E5%85%A5%E6%95%99%E7%A8%8B/index.html">
 <meta property="og:site_name" content="Zihang Gong&#39;s Blog">
 <meta property="og:description" content="📘 Markdown 写作模板（含 Front Matter 与语法指南）  第一部分：📄 Front Matter 配置说明  Front Matter 是 Markdown 文件顶部的元信息，用于配置文章标题、标签、分类、日期等内容。通常写在 --- 包裹的 YAML 格式中。  🧾 示例模板 1234567891011121314---layout: postti">
 <meta property="og:locale" content="zh_CN">
@@ -257,6 +257,15 @@
 
     
     
+      
+        <span id="leancloud-page-views-container" class="post-meta" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="leancloud-page-views"></span> 次
+        </span>
+        
+      
+      
+    
   </div>
 
 
@@ -288,6 +297,16 @@
         <div id="board">
           <article class="post-content mx-auto">
             <h1 id="seo-header">博客写入教程</h1>
+            
+              <p id="updated-time" class="note note-info" style="display: none">
+                
+                  
+                    本文最后更新于 2025-05-24T21:41:01+08:00
+                  
+                  
+
+                
+              </p>
             
             
               <div class="markdown-body">
@@ -495,7 +514,7 @@ class="math display"><em>E</em> = <em>m</em><em>c</em><sup>2</sup></span></p
   <div class="license-box my-3">
     <div class="license-title">
       <div>博客写入教程</div>
-      <div>https://gongzihang.github.io/2025/05/24/博客写入教程/</div>
+      <div>https://gongzihang.github.io/BLOG/2025/05/24/博客写入教程/</div>
     </div>
     <div class="license-meta">
       
@@ -510,6 +529,11 @@ class="math display"><em>E</em> = <em>m</em><em>c</em><sup>2</sup></span></p
           <div>2025年5月24日</div>
         </div>
       
+      
+        <div class="license-meta-item license-meta-date">
+          <div>更新于</div>
+          <div>2025年5月24日</div>
+        </div>
       
       
         <div class="license-meta-item">
@@ -756,6 +780,33 @@ class="math display"><em>E</em> = <em>m</em><em>c</em><sup>2</sup></span></p
   
 
 
+
+
+  
+<script>
+  var relativeDate = function() {
+    var updatedTime = document.getElementById('updated-time');
+    if (updatedTime) {
+      var text = updatedTime.textContent;
+      var reg = /\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:Z|[+-]\d{2}:\d{2})/;
+      var matchs = text.match(reg);
+      if (matchs) {
+        var relativeTime = moment(matchs[0]).fromNow();
+        updatedTime.textContent = text.replace(reg, relativeTime);
+      }
+      updatedTime.style.display = '';
+    }
+  };
+  Fluid.utils.createScript('https://lib.baomitu.com/moment.js/2.29.4/moment.min.js', function() {
+    if (!'zh-cn'.startsWith('en')) {
+      Fluid.utils.createScript('https://lib.baomitu.com/moment.js/2.29.4/locale/zh-cn.min.js', function() {
+        relativeDate();
+      });
+    } else {
+      relativeDate();
+    }
+  });
+</script>
 
 
   

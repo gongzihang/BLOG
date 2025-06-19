@@ -1,2 +1,2 @@
 User-agent: *
-Sitemap: https://gongzihang.github.io/BLOG/sitemap.xml
+Sitemap: https://gongzihang.github.io/BLOG/BLOG/sitemap.xml

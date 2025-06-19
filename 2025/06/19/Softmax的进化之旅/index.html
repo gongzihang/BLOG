@@ -23,7 +23,7 @@
   
     <meta property="og:type" content="article">
 <meta property="og:title" content="Softmax的进化之旅">
-<meta property="og:url" content="https://gongzihang.github.io/2025/06/19/Softmax%E7%9A%84%E8%BF%9B%E5%8C%96%E4%B9%8B%E6%97%85/index.html">
+<meta property="og:url" content="https://gongzihang.github.io/BLOG/2025/06/19/Softmax%E7%9A%84%E8%BF%9B%E5%8C%96%E4%B9%8B%E6%97%85/index.html">
 <meta property="og:site_name" content="Zihang Gong&#39;s Blog">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2025-06-19T10:43:10.000Z">
@@ -253,6 +253,15 @@
 
     
     
+      
+        <span id="leancloud-page-views-container" class="post-meta" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="leancloud-page-views"></span> 次
+        </span>
+        
+      
+      
+    
   </div>
 
 
@@ -285,6 +294,16 @@
           <article class="post-content mx-auto">
             <h1 id="seo-header">Softmax的进化之旅</h1>
             
+              <p id="updated-time" class="note note-info" style="display: none">
+                
+                  
+                    本文最后更新于 2025-06-19T18:43:10+08:00
+                  
+                  
+
+                
+              </p>
+            
             
               <div class="markdown-body">
                 
@@ -307,7 +326,7 @@
   <div class="license-box my-3">
     <div class="license-title">
       <div>Softmax的进化之旅</div>
-      <div>https://gongzihang.github.io/2025/06/19/Softmax的进化之旅/</div>
+      <div>https://gongzihang.github.io/BLOG/2025/06/19/Softmax的进化之旅/</div>
     </div>
     <div class="license-meta">
       
@@ -322,6 +341,11 @@
           <div>2025年6月19日</div>
         </div>
       
+      
+        <div class="license-meta-item license-meta-date">
+          <div>更新于</div>
+          <div>2025年6月19日</div>
+        </div>
       
       
         <div class="license-meta-item">
@@ -568,6 +592,33 @@
   
 
 
+
+
+  
+<script>
+  var relativeDate = function() {
+    var updatedTime = document.getElementById('updated-time');
+    if (updatedTime) {
+      var text = updatedTime.textContent;
+      var reg = /\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:Z|[+-]\d{2}:\d{2})/;
+      var matchs = text.match(reg);
+      if (matchs) {
+        var relativeTime = moment(matchs[0]).fromNow();
+        updatedTime.textContent = text.replace(reg, relativeTime);
+      }
+      updatedTime.style.display = '';
+    }
+  };
+  Fluid.utils.createScript('https://lib.baomitu.com/moment.js/2.29.4/moment.min.js', function() {
+    if (!'zh-cn'.startsWith('en')) {
+      Fluid.utils.createScript('https://lib.baomitu.com/moment.js/2.29.4/locale/zh-cn.min.js', function() {
+        relativeDate();
+      });
+    } else {
+      relativeDate();
+    }
+  });
+</script>
 
 
   
