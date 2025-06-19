@@ -1,0 +1,2 @@
+User-agent: *
+Sitemap: https://gongzihang.github.io/sitemap.xml
