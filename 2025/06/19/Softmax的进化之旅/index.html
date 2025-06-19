@@ -21,15 +21,21 @@
   <meta name="author" content="Zihang Gong">
   <meta name="keywords" content="">
   
-    <meta property="og:type" content="article">
+    <meta name="description" content="由于主包最近准备了一场 Coding面试，初步领略了下Flash Attention的神奇，其中的关键操作便是对于Softmax的优化。面试结束之后主包也是决定记录一下这个操作，于是有了这篇博客。   由于是准备的Coding面，这里也会附上代码的😁 (所以也可以叫 手撕online softmax?)  为什么需要Online Softmax 这个首先要从Flash At">
+<meta property="og:type" content="article">
 <meta property="og:title" content="Softmax的进化之旅">
 <meta property="og:url" content="https://gongzihang.github.io/BLOG/2025/06/19/Softmax%E7%9A%84%E8%BF%9B%E5%8C%96%E4%B9%8B%E6%97%85/index.html">
 <meta property="og:site_name" content="Zihang Gong&#39;s Blog">
+<meta property="og:description" content="由于主包最近准备了一场 Coding面试，初步领略了下Flash Attention的神奇，其中的关键操作便是对于Softmax的优化。面试结束之后主包也是决定记录一下这个操作，于是有了这篇博客。   由于是准备的Coding面，这里也会附上代码的😁 (所以也可以叫 手撕online softmax?)  为什么需要Online Softmax 这个首先要从Flash At">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://gongzihang.github.io/BLOG/2025/06/19/Softmax%E7%9A%84%E8%BF%9B%E5%8C%96%E4%B9%8B%E6%97%85/1.jpg">
 <meta property="article:published_time" content="2025-06-19T10:43:10.000Z">
-<meta property="article:modified_time" content="2025-06-19T10:43:10.031Z">
+<meta property="article:modified_time" content="2025-06-19T16:58:45.668Z">
 <meta property="article:author" content="Zihang Gong">
+<meta property="article:tag" content="计算机">
+<meta property="article:tag" content="深度学习">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://gongzihang.github.io/BLOG/2025/06/19/Softmax%E7%9A%84%E8%BF%9B%E5%8C%96%E4%B9%8B%E6%97%85/1.jpg">
   
   
   
@@ -235,7 +241,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          0 字
+          1.4k 字
         
       </span>
     
@@ -246,7 +252,7 @@
         
         
         
-          1 分钟
+          12 分钟
         
       </span>
     
@@ -297,7 +303,7 @@
               <p id="updated-time" class="note note-info" style="display: none">
                 
                   
-                    本文最后更新于 2025-06-19T18:43:10+08:00
+                    本文最后更新于 2025-06-20T00:58:45+08:00
                   
                   
 
@@ -307,7 +313,102 @@
             
               <div class="markdown-body">
                 
-                
+                <blockquote>
+<p>由于主包最近准备了一场 Coding面试，初步领略了下Flash
+Attention的神奇，其中的关键操作便是对于Softmax的优化。面试结束之后主包也是决定记录一下这个操作，于是有了这篇博客。</p>
+</blockquote>
+<blockquote>
+<p>由于是准备的Coding面，这里也会附上代码的😁 (所以也可以叫
+<em>手撕online softmax</em>?)</p>
+</blockquote>
+<h1 id="为什么需要online-softmax">为什么需要Online Softmax</h1>
+<p>这个首先要从Flash
+Attention说起，这里简单介绍，原始Transformer中，会存在一个Score矩阵，其维度为
+<span
+class="math display"><em>N</em> ⋅ <em>N</em></span>，非常巨大。这导致其在GPU上没法分块计算。由此我们想要分块计算Q,K,V矩阵，Flash
+Attention便完成了这个任务，有效减小了GPU的IO操作数量，从而实现了加速。</p>
+<p>想法很简单，但是实现起来存在一些问题,其中的关键便是Softmax，我们从头开始说起</p>
+<h1 id="softmax的进化">Softmax的“进化”</h1>
+<h2 id="标准的softmax">标准的Softmax</h2>
+<p>我们都知道Softmax的公式如下：</p>
+<p><span class="math display">$$
+Softmax(x_i) = \frac{e^{x_i}}{\sum_{j}^{N} e^{x_j}}
+$$</span></p>
+<p>这个的手撕代码很简单，我们对矩阵做行Softmax：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> torch<br><span class="hljs-keyword">import</span> torch.nn.functional <span class="hljs-keyword">as</span> F<br><br>x = torch.randn(<span class="hljs-number">2</span>,<span class="hljs-number">5</span>)<br>row_sum = torch.exp(x).<span class="hljs-built_in">sum</span>(dim=-<span class="hljs-number">1</span>,keepdim=<span class="hljs-literal">True</span>)<br>ours_out = torch.exp(x) / row_sum<br><br><span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;======= ours softmax =======&quot;</span>)<br><span class="hljs-built_in">print</span>(ours_out)<br><span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;======= Standard softmax =======&quot;</span>)<br><span class="hljs-built_in">print</span>(F.softmax(x, dim=-<span class="hljs-number">1</span>))<br></code></pre></td></tr></table></figure>
+<p>输出如下： <figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs lua">======= ours softmax =======<br>tensor(<span class="hljs-string">[[0.4979, 0.0880, 0.0198, 0.0267, 0.3675],</span><br><span class="hljs-string">        [0.1271, 0.1828, 0.3216, 0.1422, 0.2263]]</span>)<br>======= Standard softmax =======<br>tensor(<span class="hljs-string">[[0.4979, 0.0880, 0.0198, 0.0267, 0.3675],</span><br><span class="hljs-string">        [0.1271, 0.1828, 0.3216, 0.1422, 0.2263]]</span>)<br></code></pre></td></tr></table></figure></p>
+<hr />
+<p>看上去非常不错，但是当我们希望使用fp16精度或者输入的数据大一些，由于指数的存在，会很容易的溢出，比如我们仅仅将x的输入扩大100倍（<code>x = torch.randn(2,5)*100</code>）,
+输出就会变为</p>
+<figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs lua">======= ours softmax =======<br>tensor(<span class="hljs-string">[[nan, 0., 0., 0., 0.],</span><br><span class="hljs-string">        [0., 0., nan, 0., 0.]]</span>)<br></code></pre></td></tr></table></figure>
+<p>结果变得不稳定，同时出现数据溢出。由此，便提出了
+<code>Safe_softmax</code></p>
+<h2 id="safe_softmax">Safe_softmax</h2>
+<p>为了解决上述问题，我们可以很简单的对输入做一个平移。具体而言我们可以让每个x减去其所在行的最大值，核心可以描述为如下公式：</p>
+<p><span class="math display">$$
+Softmax(x_i) = \frac{e^{x_i}}{\sum_{j}^{N} e^{x_j}} =
+\frac{e^{x_i-x_{max}}}{\sum_{j}^{N} e^{x_j-x_{max}}}
+$$</span></p>
+<p>证明比较简单，我们用上一个标准的softmax不能跑的情况测试一次</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> torch<br><span class="hljs-keyword">import</span> torch.nn.functional <span class="hljs-keyword">as</span> F<br><br>x = torch.randn(<span class="hljs-number">2</span>,<span class="hljs-number">5</span>)*<span class="hljs-number">100</span><br>x_max,_ = x.<span class="hljs-built_in">max</span>(dim=-<span class="hljs-number">1</span>, keepdim=<span class="hljs-literal">True</span>)<br>x = x - x_max<br>row_sum = torch.exp(x).<span class="hljs-built_in">sum</span>(dim=-<span class="hljs-number">1</span>,keepdim=<span class="hljs-literal">True</span>)<br>ours_out = torch.exp(x) / row_sum<br><span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;======= ours softmax =======&quot;</span>)<br><span class="hljs-built_in">print</span>(ours_out)<br><span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;======= Standard softmax =======&quot;</span>)<br><span class="hljs-built_in">print</span>(F.softmax(x, dim=-<span class="hljs-number">1</span>))<br></code></pre></td></tr></table></figure>
+<p>输出： <figure class="highlight subunit"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs subunit">======= ours softmax =======<br>tensor([[0.0000e<span class="hljs-string">+00</span>, 0.0000e<span class="hljs-string">+00</span>, 7.4508e<span class="hljs-string">-32</span>, 9.3580e<span class="hljs-string">-40</span>, 1.0000e<span class="hljs-string">+00</span>],<br>        [5.3247e<span class="hljs-string">-28</span>, 0.0000e<span class="hljs-string">+00</span>, 1.0000e<span class="hljs-string">+00</span>, 2.9268e<span class="hljs-string">-07</span>, 0.0000e<span class="hljs-string">+00</span>]])<br>======= Standard softmax =======<br>tensor([[0.0000e<span class="hljs-string">+00</span>, 0.0000e<span class="hljs-string">+00</span>, 7.4508e<span class="hljs-string">-32</span>, 9.3580e<span class="hljs-string">-40</span>, 1.0000e<span class="hljs-string">+00</span>],<br>        [5.3247e<span class="hljs-string">-28</span>, 0.0000e<span class="hljs-string">+00</span>, 1.0000e<span class="hljs-string">+00</span>, 2.9268e<span class="hljs-string">-07</span>, 0.0000e<span class="hljs-string">+00</span>]])<br></code></pre></td></tr></table></figure></p>
+<hr />
+<p>目前我们简单解决了Softmax的溢出问题，但是我们会发现其计算过程中，依赖全局的和。这也限制了我们希望能够局部分块处理Attention的计算。由此提出了<code>Online Softmax</code>。</p>
+<h2 id="online-softmax">Online Softmax</h2>
+<p><code>Online Softmax</code>将原来的计算过程，通过两个全局变量转变为了流式计算过程。</p>
+<p>具体而言，我们假设输入<code>X</code>可以分为两个部分，即 <span
+class="math display"><em>X</em> = (<em>X</em><sub>1</sub>,<em>X</em><sub>2</sub>)</span>
+。我们依次处理两个部分。</p>
+<p>首先针对<span class="math inline"><em>X</em><sub>1</sub></span>,
+我们通过如下公式计算，其行和最大值 <span
+class="math inline"><em>M</em><sub>1</sub></span>，以及<code>Row_Sum</code>:<span
+class="math inline"><em>L</em><sub>1</sub></span>,</p>
+<!-- $$
+M_1 = max(X_1)  即每行的最大值
+$$ -->
+<p><span class="math display">$$
+L_1 = \sum_{j=1}^{X_1.size(-1)} exp(X_1^j - M_1) , 即局部exp之和
+$$</span></p>
+<p>由此，基于上述两个全局变量我们能够计算出这个局部的（即<span
+class="math inline"><em>X</em><sub>1</sub></span>）softmax值，同理我们可以得到<span
+class="math inline"><em>M</em><sub>2</sub>, <em>L</em><sub>2</sub></span></p>
+<p>但是想要基于全局准确的Softmax结果还要进一步计算，具体可以做如下推导:</p>
+<p><span class="math display">$$
+\begin{aligned}
+M &amp;= Max(M_1, M_2) \\
+L &amp;= \sum_{j=1}^{X.size(-1)} exp(X^j - M) \\
+&amp;= \sum_{j=1}^{X_1.size(-1)} exp(X_1^j - M) +
+\sum_{j=1}^{X_2.size(-1)} exp(X_2^j - M) \\
+&amp;= exp(M_1 - M) * \sum_{j=1}^{X_1.size(-1)} exp(X_1^j - M_1) +
+exp(M_2 - M) * \sum_{j=1}^{X_2.size(-1)} exp(X_2^j - M_2) \\
+&amp; = L_1 * exp(M_1 - M) + L_2 * exp(M_2 - M)
+\end{aligned}
+$$</span></p>
+<p>由此我们更具局部的信息计算出来全局的两个信息，当然在实际输入顺序中，<span
+class="math inline"><em>L</em><sub>2</sub></span>
+可以不用计算，可以计算得到<span
+class="math inline"><em>M</em></span>之后，直接计算局部和， 即：</p>
+<p><span class="math display">$$
+L = L_1 * exp(M_1 - M) + \sum_{j=1}^{X_2.size(-1)} exp(X_2^j - M)
+$$</span></p>
+<p>得到两个的全局信息之后，在遍历一遍即可得到最后的Softmax值，具体的代码实现如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> torch<br><span class="hljs-keyword">import</span> torch.nn.functional <span class="hljs-keyword">as</span> F<br><br>x = torch.randn(<span class="hljs-number">2</span>,<span class="hljs-number">16</span>)<br>out = torch.zeros_like(x)<br>x_blocks = torch.split(x, <span class="hljs-number">4</span>, dim=<span class="hljs-number">1</span>)<br>out_blocks = <span class="hljs-built_in">list</span>(torch.split(out, <span class="hljs-number">4</span>, dim=<span class="hljs-number">1</span>))<br><br>m = torch.ones(x.size(<span class="hljs-number">0</span>)).unsqueeze(-<span class="hljs-number">1</span>)*-<span class="hljs-number">1e9</span><br>l = torch.zeros(x.size(<span class="hljs-number">0</span>)).unsqueeze(-<span class="hljs-number">1</span>)<br><br><span class="hljs-keyword">for</span> xi <span class="hljs-keyword">in</span> x_blocks:<br>    mi,_ = xi.<span class="hljs-built_in">max</span>(dim=-<span class="hljs-number">1</span>, keepdim=<span class="hljs-literal">True</span>)<br>    m_new = torch.maximum(mi,m)<br>    l = l*torch.exp(m - m_new) + torch.exp(xi-m_new).<span class="hljs-built_in">sum</span>(dim=-<span class="hljs-number">1</span>, keepdim=<span class="hljs-literal">True</span>)<br>    m = m_new<br><br><span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-built_in">len</span>(x_blocks)):<br>    out_blocks[i] = torch.exp(x_blocks[i] - m) / l<br>    <br>out = torch.cat(out_blocks, dim=<span class="hljs-number">1</span>)<br><span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;======= ours softmax =======&quot;</span>)<br><span class="hljs-built_in">print</span>(out)<br><span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;======= Standard softmax =======&quot;</span>)<br><span class="hljs-built_in">print</span>(F.softmax(x, dim=-<span class="hljs-number">1</span>))<br></code></pre></td></tr></table></figure>
+<p>输出：</p>
+<figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs lua">======= ours softmax =======<br>tensor(<span class="hljs-string">[[0.0072, 0.1026, 0.0273, 0.0057, 0.2055, 0.1391, 0.0090, 0.0694, 0.0036,</span><br><span class="hljs-string">         0.0191, 0.0087, 0.0462, 0.0069, 0.0355, 0.2882, 0.0259],</span><br><span class="hljs-string">        [0.1437, 0.0477, 0.0249, 0.0123, 0.0210, 0.0544, 0.0244, 0.0082, 0.2192,</span><br><span class="hljs-string">         0.1388, 0.0311, 0.1340, 0.0217, 0.0071, 0.0646, 0.0468]]</span>)<br>======= Standard softmax =======<br>tensor(<span class="hljs-string">[[0.0072, 0.1026, 0.0273, 0.0057, 0.2055, 0.1391, 0.0090, 0.0694, 0.0036,</span><br><span class="hljs-string">         0.0191, 0.0087, 0.0462, 0.0069, 0.0355, 0.2882, 0.0259],</span><br><span class="hljs-string">        [0.1437, 0.0477, 0.0249, 0.0123, 0.0210, 0.0544, 0.0244, 0.0082, 0.2192,</span><br><span class="hljs-string">         0.1388, 0.0311, 0.1340, 0.0217, 0.0071, 0.0646, 0.0468]]</span>)<br></code></pre></td></tr></table></figure>
+<p>最后用一张图片来总结一下online
+softmax的思路，我觉得挺贴切的。即可以将原本三次扫描的Safe
+Softmax转变为两次扫描的 Online Softmax</p>
+<figure>
+<img src="1.jpg" srcset="/BLOG/img/loading.gif" lazyload alt="示意图" />
+<figcaption aria-hidden="true">示意图</figcaption>
+</figure>
+<blockquote>
+<p>当然在实际的Flash Attention中，可以进一步简化为one
+pass的扫描，这就下回分解了😋</p>
+</blockquote>
+<h1 id="参考">参考</h1>
+<p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/5078640012">【手撕online
+softmax】Flash Attention前传，一撕一个不吱声</a></p>
 
                 
               </div>
@@ -316,6 +417,43 @@
             <div>
               <div class="post-metas my-3">
   
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/BLOG/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA/" class="category-chain-item">计算机</a>
+  
+  
+    <span>></span>
+    
+  <a href="/BLOG/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/" class="category-chain-item">深度学习</a>
+  
+  
+
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/BLOG/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA/" class="print-no-link">#计算机</a>
+      
+        <a href="/BLOG/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/" class="print-no-link">#深度学习</a>
+      
+    </div>
   
 </div>
 
@@ -344,7 +482,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>更新于</div>
-          <div>2025年6月19日</div>
+          <div>2025年6月20日</div>
         </div>
       
       
@@ -468,6 +606,12 @@
 
 
   
+
+
+  
+  
+
+
 
 
 
@@ -713,6 +857,49 @@
 
 
   <script>Fluid.plugins.imageCaption();</script>
+
+  
+      <script>
+        if (!window.MathJax) {
+          window.MathJax = {
+            tex    : {
+              inlineMath: { '[+]': [['$', '$']] }
+            },
+            loader : {
+              load: ['ui/lazy']
+            },
+            options: {
+              renderActions: {
+                insertedScript: [200, () => {
+                  document.querySelectorAll('mjx-container').forEach(node => {
+                    let target = node.parentNode;
+                    if (target.nodeName.toLowerCase() === 'li') {
+                      target.parentNode.classList.add('has-jax');
+                    }
+                  });
+                }, '', false]
+              }
+            }
+          };
+        } else {
+          MathJax.startup.document.state(0);
+          MathJax.texReset();
+          MathJax.typeset();
+          MathJax.typesetPromise();
+        }
+
+        Fluid.events.registerRefreshCallback(function() {
+          if ('MathJax' in window && MathJax.startup.document && typeof MathJax.startup.document.state === 'function') {
+            MathJax.startup.document.state(0);
+            MathJax.texReset();
+            MathJax.typeset();
+            MathJax.typesetPromise();
+          }
+        });
+      </script>
+    
+
+  <script  src="https://lib.baomitu.com/mathjax/3.2.2/es5/tex-mml-chtml.js" ></script>
 
   <script defer src="/BLOG/js/leancloud.js" ></script>
 
